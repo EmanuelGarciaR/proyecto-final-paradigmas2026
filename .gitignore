@@ -1,0 +1,32 @@
+# Environment overrides (use .env.example as template; docker-compose has defaults)
+.env
+
+# Node / Frontend / Express
+node_modules/
+.next/
+
+# Java (Spring Boot / Maven / Gradle)
+backend-java/target/
+backend-java/.mvn/wrapper/maven-wrapper.jar
+backend-java/.gradle/
+backend-java/build/
+
+# Scala (sbt / Metals / Bloop)
+backend-scala/target/
+backend-scala/project/target/
+backend-scala/project/project/
+backend-scala/.bsp/
+backend-scala/.bloop/
+backend-scala/.metals/
+
+# Python (Analysis / Virtualenv)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
