@@ -139,11 +139,14 @@ function parseScoverageCoverage() {
 }
 
 function computeExpressCoverage() {
-  // Medido sobre los casos de uso y controladores cubiertos por las 42 pruebas en backend-express/tests
+  // Medido con: npx tsx --test --experimental-test-coverage backend-express/tests/*.test.ts
+  // (42 pruebas, 11 suites). LIMITACIÓN: el runner de Node solo reporta los archivos que
+  // las pruebas cargan (no incluye repositorios Prisma, container, etc.), por lo que este
+  // valor está sobreestimado frente a JaCoCo/scoverage, que analizan todas las clases.
   return {
-    lineCoveragePct: 58.4,
-    branchCoveragePct: 51.2,
-    tool: "node:test (42 assertions across 11 suites)",
+    lineCoveragePct: 84.77,
+    branchCoveragePct: 67.58,
+    tool: "node:test --experimental-test-coverage (solo archivos cargados por las pruebas)",
   };
 }
 

@@ -1,6 +1,6 @@
 # Consolidación y Ranking Automático de Backends (Fase 8)
 
-- **Fecha de generación**: `2026-11-16T05:15:38.470147+00:00`
+- **Fecha de generación**: `2026-11-16T05:24:29.215827+00:00`
 - **Total de ejecuciones consolidadas**: `135` (3 volúmenes × 5 escenarios × 3 backends × 3 repeticiones rotadas)
 - **Backend Ganador Cuantitativo**: **`JAVA`** (89.33 / 100 pts)
 
@@ -50,6 +50,6 @@
 
 | Posición | Backend | Puntaje Cualitativo | SLOC | Archivos | Complejidad (CC/100 SLOC) | Cobertura (%) | Herramienta Cobertura | Densidad FP (FP/100 SLOC) |
 | :-: | :--- | :-: | --: | :-: | --: | --: | :--- | --: |
-| **#1** | **SCALA** | **93.11** | 2053 | 8 | 12.47 | 54.58% | sbt-scoverage 2.2.1 (scoverage.xml) | 6.09 |
-| **#2** | **JAVA** | **78.45** | 2436 | 10 | 11.58 | 60.20% | JaCoCo 0.8.12 (jacoco.xml) | 1.48 |
-| **#3** | **EXPRESS** | **71.78** | 3366 | 79 | 10.43 | 58.40% | node:test (42 assertions across 11 suites) | 0.74 |
+| **#1** | **SCALA** | **85.23** | 2053 | 8 | 12.47 | 54.58% | sbt-scoverage 2.2.1 (scoverage.xml) | 6.09 |
+| **#2** | **EXPRESS** | **72.68** | 3366 | 79 | 10.43 | 84.77% | node:test --experimental-test-coverage (solo archivos cargados por las pruebas) | 0.74 |
+| **#3** | **JAVA** | **69.75** | 2436 | 10 | 11.58 | 60.20% | JaCoCo 0.8.12 (jacoco.xml) | 1.48 |

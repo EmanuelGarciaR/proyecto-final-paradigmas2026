@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T04:27:51.921Z",
+  "generatedAt": "2026-11-16T05:24:28.928Z",
   "rule": {
     "description": "Puntaje Cualitativo = 0.25 * (min_SLOC / SLOC) + 0.25 * (min_CC_density / CC_density) + 0.30 * (Cov / max_Cov) + 0.20 * (FP_density / max_FP_density)",
     "weights": {
@@ -29,9 +29,33 @@
       "scores": {
         "concisenessScore": 100,
         "simplicityScore": 83.64,
-        "coverageScore": 90.66,
+        "coverageScore": 64.39,
         "functionalExpressivenessScore": 100,
-        "totalQualitativeScore": 93.11
+        "totalQualitativeScore": 85.23
+      }
+    },
+    {
+      "backend": "express",
+      "filesCount": 79,
+      "totalLines": 4431,
+      "blankLines": 574,
+      "commentLines": 491,
+      "sloc": 3366,
+      "cyclomaticComplexityTotal": 351,
+      "ccPer100Sloc": 10.43,
+      "functionalConstructs": 25,
+      "fpPer100Sloc": 0.74,
+      "coverage": {
+        "lineCoveragePct": 84.77,
+        "branchCoveragePct": 67.58,
+        "tool": "node:test --experimental-test-coverage (solo archivos cargados por las pruebas)"
+      },
+      "scores": {
+        "concisenessScore": 60.99,
+        "simplicityScore": 100,
+        "coverageScore": 100,
+        "functionalExpressivenessScore": 12.15,
+        "totalQualitativeScore": 72.68
       }
     },
     {
@@ -53,33 +77,9 @@
       "scores": {
         "concisenessScore": 84.28,
         "simplicityScore": 90.07,
-        "coverageScore": 100,
+        "coverageScore": 71.02,
         "functionalExpressivenessScore": 24.3,
-        "totalQualitativeScore": 78.45
-      }
-    },
-    {
-      "backend": "express",
-      "filesCount": 79,
-      "totalLines": 4431,
-      "blankLines": 574,
-      "commentLines": 491,
-      "sloc": 3366,
-      "cyclomaticComplexityTotal": 351,
-      "ccPer100Sloc": 10.43,
-      "functionalConstructs": 25,
-      "fpPer100Sloc": 0.74,
-      "coverage": {
-        "lineCoveragePct": 58.4,
-        "branchCoveragePct": 51.2,
-        "tool": "node:test (42 assertions across 11 suites)"
-      },
-      "scores": {
-        "concisenessScore": 60.99,
-        "simplicityScore": 100,
-        "coverageScore": 97.01,
-        "functionalExpressivenessScore": 12.15,
-        "totalQualitativeScore": 71.78
+        "totalQualitativeScore": 69.75
       }
     }
   ]
