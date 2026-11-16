@@ -1,0 +1,38 @@
+{
+  "seed": 20261115,
+  "repetitions": 3,
+  "warmupDurationSeconds": 15,
+  "mockLatencyMs": 50,
+  "volumes": [1000, 100000, 1000000],
+  "backends": {
+    "express": "http://localhost:3001",
+    "java": "http://localhost:3002",
+    "scala": "http://localhost:3003"
+  },
+  "scenarios": {
+    "low": {
+      "vus": 10,
+      "duration": "30s"
+    },
+    "medium": {
+      "vus": 30,
+      "duration": "45s"
+    },
+    "high": {
+      "vus": 60,
+      "duration": "60s"
+    },
+    "spike": {
+      "stages": [
+        { "duration": "10s", "target": 10 },
+        { "duration": "15s", "target": 120 },
+        { "duration": "15s", "target": 10 },
+        { "duration": "10s", "target": 0 }
+      ]
+    },
+    "soak": {
+      "vus": 25,
+      "duration": "120s"
+    }
+  }
+}

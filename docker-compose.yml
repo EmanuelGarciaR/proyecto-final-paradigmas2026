@@ -1,0 +1,218 @@
+services:
+  # ── 1. Base de Datos Réplica (Volumen Docker propio, independiente de Neon) ─
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: chivas-postgres-replica
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-chivas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-chivas_secret_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-chivas_rumberas}
+      TZ: America/Bogota
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - chivas_pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./infra/postgres/reset-db.sql:/opt/reset-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chivas} -d ${POSTGRES_DB:-chivas_rumberas}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - chivas-net
+
+  # ── 2. Backend 1: Node.js + Express (Código fuente intacto) ─────────────────
+  backend-express:
+    image: ${DOCKERHUB_USER:-emagarciar}/chivas-backend-express:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: infra/docker/express/Dockerfile
+    container_name: chivas-backend-express
+    restart: unless-stopped
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      TZ: America/Bogota
+      DATABASE_URL: postgresql://${POSTGRES_USER:-chivas}:${POSTGRES_PASSWORD:-chivas_secret_2026}@postgres-db:5432/${POSTGRES_DB:-chivas_rumberas}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-chivas}:${POSTGRES_PASSWORD:-chivas_secret_2026}@postgres-db:5432/${POSTGRES_DB:-chivas_rumberas}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-chivas_rumberas_super_secret_jwt_key_2026_benchmark}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      INTEGRATIONS_MODE: ${INTEGRATIONS_MODE:-mock}
+      MOCK_LATENCY_MS: ${MOCK_LATENCY_MS:-50}
+      DISABLE_RATE_LIMIT: ${DISABLE_RATE_LIMIT:-false}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+    ports:
+      - "${EXPRESS_PORT:-3001}:3000"
+    cpus: ${BACKEND_CPUS:-1.0}
+    mem_limit: ${BACKEND_MEM_LIMIT:-512m}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chivas-net
+
+  # ── 3. Backend 2: Java 21 + Spring Boot (Fase 3) ────────────────────────────
+  backend-java:
+    image: ${DOCKERHUB_USER:-emagarciar}/chivas-backend-java:${IMAGE_TAG:-latest}
+    build:
+      context: ./backend-java
+      dockerfile: Dockerfile
+    container_name: chivas-backend-java
+    restart: unless-stopped
+    profiles: ["all", "java"]
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      TZ: America/Bogota
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB:-chivas_rumberas}
+      DB_USERNAME: ${POSTGRES_USER:-chivas}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-chivas_secret_2026}
+      JWT_SECRET: ${JWT_SECRET:-chivas_rumberas_super_secret_jwt_key_2026_benchmark}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      INTEGRATIONS_MODE: ${INTEGRATIONS_MODE:-mock}
+      MOCK_LATENCY_MS: ${MOCK_LATENCY_MS:-50}
+      DISABLE_RATE_LIMIT: ${DISABLE_RATE_LIMIT:-false}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+    ports:
+      - "${JAVA_PORT:-3002}:3000"
+    cpus: ${BACKEND_CPUS:-1.0}
+    mem_limit: ${BACKEND_MEM_LIMIT:-512m}
+    networks:
+      - chivas-net
+
+  # ── 4. Backend 3: Scala 3 + sbt + http4s (Fase 4) ───────────────────────────
+  backend-scala:
+    image: ${DOCKERHUB_USER:-emagarciar}/chivas-backend-scala:${IMAGE_TAG:-latest}
+    build:
+      context: ./backend-scala
+      dockerfile: Dockerfile
+    container_name: chivas-backend-scala
+    restart: unless-stopped
+    profiles: ["all", "scala"]
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      TZ: America/Bogota
+      DATABASE_URL: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB:-chivas_rumberas}
+      DB_USERNAME: ${POSTGRES_USER:-chivas}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-chivas_secret_2026}
+      JWT_SECRET: ${JWT_SECRET:-chivas_rumberas_super_secret_jwt_key_2026_benchmark}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      INTEGRATIONS_MODE: ${INTEGRATIONS_MODE:-mock}
+      MOCK_LATENCY_MS: ${MOCK_LATENCY_MS:-50}
+      DISABLE_RATE_LIMIT: ${DISABLE_RATE_LIMIT:-false}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+    ports:
+      - "${SCALA_PORT:-3003}:3000"
+    cpus: ${BACKEND_CPUS:-1.0}
+    mem_limit: ${BACKEND_MEM_LIMIT:-512m}
+    networks:
+      - chivas-net
+
+  # ── 5. Frontend (Next.js) ───────────────────────────────────────────────────
+  frontend:
+    image: ${DOCKERHUB_USER:-emagarciar}/chivas-frontend:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: infra/docker/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_HOST: http://localhost:${EXPRESS_PORT:-3001}
+    container_name: chivas-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend-express
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_HOST: http://backend-express:3000
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - chivas-net
+
+  # ── 6. Observabilidad: Prometheus ───────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: chivas-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - chivas_prometheus_data:/prometheus
+    networks:
+      - chivas-net
+
+  # ── 7. Observabilidad: Grafana (Dashboards y Datasources como Código) ───────
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: chivas-grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/chivas-backends-comparison.json
+    ports:
+      - "${GRAFANA_PORT:-3004}:3000"
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - chivas_grafana_data:/var/lib/grafana
+    networks:
+      - chivas-net
+
+  # ── 8. Observabilidad: cAdvisor (CPU y Memoria por Contenedor) ──────────────
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: chivas-cadvisor
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "${CADVISOR_PORT:-8080}:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - chivas-net
+
+volumes:
+  chivas_pgdata:
+    name: chivas_rumberas_pgdata_replica
+  chivas_prometheus_data:
+    name: chivas_rumberas_prometheus_data
+  chivas_grafana_data:
+    name: chivas_rumberas_grafana_data
+
+networks:
+  chivas-net:
+    name: chivas_rumberas_net
+    driver: bridge

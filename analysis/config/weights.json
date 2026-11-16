@@ -1,0 +1,19 @@
+{
+  "weights": {
+    "latency_p95": 0.30,
+    "throughput": 0.25,
+    "memory": 0.15,
+    "cpu": 0.10,
+    "startup_time": 0.10,
+    "error_rate": 0.10
+  },
+  "directions": {
+    "latency_p95": "lower_is_better",
+    "throughput": "higher_is_better",
+    "memory": "lower_is_better",
+    "cpu": "lower_is_better",
+    "startup_time": "lower_is_better",
+    "error_rate": "lower_is_better"
+  },
+  "backends": ["express", "java", "scala"]
+}

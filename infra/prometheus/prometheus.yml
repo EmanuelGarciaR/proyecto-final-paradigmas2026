@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "chivas-backends"
+    metrics_path: "/metrics"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["backend-express:3000"]
+        labels:
+          backend: "express"
+          language: "node-express"
+          container_name: "chivas-backend-express"
+      - targets: ["backend-java:3000"]
+        labels:
+          backend: "java"
+          language: "java-springboot"
+          container_name: "chivas-backend-java"
+      - targets: ["backend-scala:3000"]
+        labels:
+          backend: "scala"
+          language: "scala-http4s"
+          container_name: "chivas-backend-scala"
+
+  - job_name: "cadvisor"
+    metrics_path: "/metrics"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["cadvisor:8080"]
