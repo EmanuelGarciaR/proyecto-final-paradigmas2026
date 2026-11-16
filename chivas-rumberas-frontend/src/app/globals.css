@@ -1,0 +1,267 @@
+@import "tailwindcss";
+@config "../../tailwind.config.mjs";
+
+:root {
+  /* Colores base */
+  --color-amarillo: #f0cb41;
+  --color-rojo: #A83627;
+  --color-crema-claro: #f7f1e1;
+  --color-crema-calido: #f0dfc0;
+  --color-blanco: #ffffff;
+  --color-negro-profundo: #160c07;
+  --color-marron-oscuro: #24150e;
+  --color-negro: #000000;
+  --color-gris-oscuro: #333333;
+  --color-gris-medio: #4d4d4d;
+  --color-gris-claro: #a5a5a5;
+
+  /* Variables semánticas (Light Mode) */
+  --bg-primary: var(--color-crema-claro);
+  --bg-secondary: var(--color-crema-calido);
+  --bg-card: var(--color-blanco);
+  --bg-dark-panel: var(--color-negro-profundo);
+  --text-primary: var(--color-negro);
+  --text-secondary: var(--color-gris-medio);
+  --text-light: var(--color-blanco);
+  --text-accent: var(--color-rojo);
+  --border-color: var(--color-gris-claro);
+
+  /* Selección y Tipografía */
+  --color-selection: #f0cb41;
+  --font-primary: var(--font-space-grotesk);
+  --font-secondary: var(--font-libre-baskerville);
+  --font-size-sm: 0.85rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.2rem;
+  --font-size-lg: 2rem;
+}
+
+[data-theme='dark'] {
+  /* Variables Semánticas (Dark Mode) */
+  --bg-primary: var(--color-negro-profundo);
+  --bg-secondary: var(--color-marron-oscuro);
+  --bg-card: var(--color-marron-oscuro);
+  --bg-dark-panel: var(--color-negro);
+  --text-primary: var(--color-crema-claro);
+  --text-secondary: var(--color-gris-claro);
+  --text-light: var(--color-negro);
+  --text-accent: var(--color-amarillo);
+  --border-color: var(--text-primary);
+}
+
+@theme inline {
+  --color-amarillo: var(--color-amarillo);
+  --color-rojo: var(--color-rojo);
+  --color-blanco: var(--color-blanco);
+  --color-negro: var(--color-negro);
+  
+  /* Esto genera: bg-primary, bg-secondary, bg-card... */
+  --color-primary: var(--bg-primary);
+  --color-secondary: var(--bg-secondary);
+  --color-card: var(--bg-card);
+  
+  /* Esto genera: text-txt-primary, text-txt-secondary... */
+  --color-txt-primary: var(--text-primary);
+  --color-txt-secondary: var(--text-secondary);
+
+  /* Esto genera: border-borde */
+  --color-borde: var(--border-color);
+
+  /* Tipografías: genera font-primary y font-secondary */
+  --font-primary: var(--font-space-grotesk);
+  --font-secondary: var(--font-libre-baskerville);
+
+  /* Tamaños: genera text-sm, text-md, etc. */
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-md: var(--font-size-md);
+  --text-lg: var(--font-size-lg);
+  --animate-chivas-right: chivas-right 50s linear infinite;
+  --animate-chivas-left: chivas-left 50s linear infinite;
+}
+
+@keyframes chivas-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes chivas-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Estilos base del documento */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+html, body, p, h1, h2, h3, h4, h5, h6, span, a, li, button, label, input, textarea {
+    overflow-wrap: break-word;
+    word-break: normal;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+}
+
+p, li, span, a {
+    text-wrap: pretty;
+}
+
+img, video, canvas, svg {
+    max-width: 100%;
+}
+
+::-moz-selection {
+    background-color: var(--color-selection); 
+    color: var(--color-negro);
+}
+
+::selection {
+    background-color: var(--color-selection); 
+    color: var(--color-negro);
+}
+
+/* View Transitions & micro-animations (transform + opacity only) */
+@keyframes vt-slide-up-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vt-slide-down-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-slide-left-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes vt-slide-left-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+
+@keyframes vt-slide-right-in {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes vt-slide-right-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+
+::view-transition-new(.slide-up) {
+  animation: vt-slide-up-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+::view-transition-old(.slide-down) {
+  animation: vt-slide-down-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(.fade-soft) {
+  animation: vt-fade-in 220ms ease-out both;
+}
+::view-transition-old(.fade-soft) {
+  animation: vt-fade-out 180ms ease-in both;
+}
+
+::view-transition-new(.cal-next) {
+  animation: vt-slide-left-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+::view-transition-old(.cal-next) {
+  animation: vt-slide-left-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(.cal-prev) {
+  animation: vt-slide-right-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+::view-transition-old(.cal-prev) {
+  animation: vt-slide-right-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  .motion-safe-progress {
+    transition-duration: 0.01ms !important;
+  }
+}
