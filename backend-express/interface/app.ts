@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { errorHandler } from "./middlewares/error.middleware";
+import { metricsMiddleware, metricsHandler } from "./observability/metrics";
 import { createAuthRouter } from "./routes/auth.routes";
 import { createChivasRouter } from "./routes/chivas.routes";
 import { createTravelsRouter } from "./routes/travels.routes";
@@ -34,11 +35,13 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(metricsMiddleware);
 
-// ── Health check ──────────────────────────────────────────────────────────
+// ── Health check & Observability ──────────────────────────────────────────
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+app.get("/metrics", metricsHandler);
 
 // ── Rutas ─────────────────────────────────────────────────────────────────
 app.use("/auth", createAuthRouter(authController));
