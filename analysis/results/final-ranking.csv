@@ -1,0 +1,4 @@
+position,backend,total_score,latency_p50_ms,latency_p95_ms,latency_p99_ms,throughput_rps,memory_mb,cpu_pct,startup_time_s,error_rate_pct,score_latency_p95_weighted,score_throughput_weighted,score_memory_weighted,score_cpu_weighted,score_startup_weighted,score_error_rate_weighted
+1,java,89.33,6.117,112.858,136.674,345.594,91.22,46.73,12.585,0.0,30.0,25.0,13.51,10.0,0.82,10.0
+2,scala,84.0,8.434,121.496,157.623,302.417,82.18,64.54,5.162,0.0,27.87,21.88,15.0,7.24,2.01,10.0
+3,express,45.3,100.9,632.198,717.601,136.556,311.37,76.65,1.038,0.0,5.36,9.88,3.96,6.1,10.0,10.0

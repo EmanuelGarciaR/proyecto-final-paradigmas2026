@@ -1,190 +1,28 @@
 {
-    "metrics": {
-        "http_req_connecting": {
-            "med": 0,
-            "max": 1.72081,
-            "p(50)": 0,
-            "p(90)": 0,
-            "p(95)": 0,
-            "p(99)": 0.8840804800000004,
-            "avg": 0.02038220796156486,
-            "min": 0
-        },
-        "data_received": {
-            "count": 6037454,
-            "rate": 2705075.5668717893
-        },
-        "checks": {
-            "passes": 859,
-            "fails": 597,
-            "value": 0.5899725274725275
-        },
-        "http_req_waiting": {
-            "p(90)": 106.55355680000007,
-            "p(95)": 144.08346460000007,
-            "p(99)": 256.68618700000087,
-            "avg": 27.22872249897052,
-            "min": 0.345201,
-            "med": 3.462321,
-            "max": 352.257231,
-            "p(50)": 3.462321
-        },
-        "http_req_duration{expected_response:true}": {
-            "p(90)": 132.08525860000003,
-            "p(95)": 166.3416086,
-            "p(99)": 278.34152765999994,
-            "avg": 38.26114314784633,
-            "min": 0.474528,
-            "med": 5.53039,
-            "max": 352.386218,
-            "p(50)": 5.53039
-        },
-        "iteration_duration": {
-            "med": 57.643368,
-            "max": 402.924156,
-            "p(50)": 57.643368,
-            "p(90)": 169.4670666,
-            "p(95)": 208.76626079999997,
-            "p(99)": 325.2691929600006,
-            "avg": 85.30469007775014,
-            "min": 50.55275
-        },
-        "http_reqs": {
-            "count": 1457,
-            "rate": 652.8074749608356
-        },
-        "http_req_blocked": {
-            "p(95)": 0.01811520000000003,
-            "p(99)": 1.0863262400000016,
-            "avg": 0.07639404735758404,
-            "min": 0.00101,
-            "med": 0.004246,
-            "max": 16.461486,
-            "p(50)": 0.004246,
-            "p(90)": 0.008661200000000008
-        },
-        "iterations": {
-            "count": 1209,
-            "rate": 541.6913090100551
-        },
-        "http_req_duration": {
-            "max": 352.386218,
-            "p(50)": 3.634867,
-            "p(90)": 109.3652512,
-            "p(95)": 146.00473680000002,
-            "p(99)": 256.98010604000086,
-            "avg": 28.039426048730288,
-            "min": 0.376502,
-            "med": 3.634867
-        },
-        "chivas_dashboard_calendar_duration": {
-            "p(50)": 2.568537,
-            "p(90)": 50.3153408,
-            "p(95)": 54.65765479999999,
-            "p(99)": 126.56488602000022,
-            "avg": 14.417346019553069,
-            "min": 0.376502,
-            "med": 2.568537,
-            "max": 147.311043
-        },
-        "http_req_tls_handshaking": {
-            "min": 0,
-            "med": 0,
-            "max": 0,
-            "p(50)": 0,
-            "p(90)": 0,
-            "p(95)": 0,
-            "p(99)": 0,
-            "avg": 0
-        },
-        "http_req_receiving": {
-            "med": 0.059683,
-            "max": 162.651706,
-            "p(50)": 0.059683,
-            "p(90)": 0.26479880000000006,
-            "p(95)": 0.6115406000000012,
-            "p(99)": 3.6851342000000122,
-            "avg": 0.7078734557309543,
-            "min": 0.006975
-        },
-        "chivas_availability_duration": {
-            "p(99)": 165.1290387,
-            "avg": 25.856466794979085,
-            "min": 1.848247,
-            "med": 7.830031,
-            "max": 168.034095,
-            "p(50)": 7.830031,
-            "p(90)": 67.14225800000001,
-            "p(95)": 79.64607889999994
-        },
-        "chivas_error_rate": {
-            "passes": 597,
-            "fails": 612,
-            "value": 0.49379652605459057
-        },
-        "chivas_paginated_bookings_duration": {
-            "med": 1.797757,
-            "max": 162.739074,
-            "p(50)": 1.797757,
-            "p(90)": 50.395876200000004,
-            "p(95)": 62.0211892,
-            "p(99)": 96.47629152000015,
-            "avg": 11.818934426778238,
-            "min": 0.457656
-        },
-        "http_req_sending": {
-            "p(50)": 0.012253,
-            "p(90)": 0.03973260000000003,
-            "p(95)": 0.10263720000000003,
-            "p(99)": 0.6817228000000026,
-            "avg": 0.10283009402882613,
-            "min": 0.002168,
-            "med": 0.012253,
-            "max": 16.778025
-        },
-        "http_req_failed": {
-            "passes": 598,
-            "fails": 859,
-            "value": 0.4104323953328758
-        },
-        "data_sent": {
-            "count": 223436,
-            "rate": 100110.28893297823
-        },
-        "vus": {
-            "value": 50,
-            "min": 50,
-            "max": 50
-        },
-        "vus_max": {
-            "max": 50,
-            "value": 50,
-            "min": 50
-        }
-    },
-    "setup_data": {
-        "token": ""
-    },
     "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
         "checks": {
-            "calendar 200": {
-                "id": "95c8da7d238fcdf840b8d3c9a9452a66",
-                "passes": 0,
-                "fails": 358,
-                "name": "calendar 200",
-                "path": "::calendar 200"
+            "availability 200": {
+                "name": "availability 200",
+                "path": "::availability 200",
+                "id": "2533e733852d579adfcb4a6459b0f879",
+                "passes": 136,
+                "fails": 0
             },
-            "bookings paginated 200": {
-                "name": "bookings paginated 200",
-                "path": "::bookings paginated 200",
-                "id": "dabb209e1e56cbba0869dfed897c1c9c",
-                "passes": 0,
-                "fails": 239
+            "calendar 200": {
+                "path": "::calendar 200",
+                "id": "95c8da7d238fcdf840b8d3c9a9452a66",
+                "passes": 181,
+                "fails": 0,
+                "name": "calendar 200"
             },
             "chivas 200": {
                 "path": "::chivas 200",
                 "id": "3b320ba60ecd09ecb2e8327fcf22596d",
-                "passes": 247,
+                "passes": 142,
                 "fails": 0,
                 "name": "chivas 200"
             },
@@ -192,27 +30,189 @@
                 "name": "travels 200",
                 "path": "::travels 200",
                 "id": "a9f74f43620ae028e168273f44dfcd43",
-                "passes": 247,
+                "passes": 142,
                 "fails": 0
             },
-            "availability 200": {
-                "name": "availability 200",
-                "path": "::availability 200",
-                "id": "2533e733852d579adfcb4a6459b0f879",
-                "passes": 239,
+            "bookings paginated 200": {
+                "name": "bookings paginated 200",
+                "path": "::bookings paginated 200",
+                "id": "dabb209e1e56cbba0869dfed897c1c9c",
+                "passes": 133,
                 "fails": 0
             },
             "create booking 201 or 409": {
-                "id": "7f60dc9cb625e1dc241ab9aecdaf92a8",
-                "passes": 126,
-                "fails": 0,
                 "name": "create booking 201 or 409",
-                "path": "::create booking 201 or 409"
+                "path": "::create booking 201 or 409",
+                "id": "7f60dc9cb625e1dc241ab9aecdaf92a8",
+                "passes": 67,
+                "fails": 0
             }
+        }
+    },
+    "metrics": {
+        "iterations": {
+            "count": 659,
+            "rate": 301.29766494826305
         },
-        "name": "",
-        "path": "",
-        "id": "d41d8cd98f00b204e9800998ecf8427e",
-        "groups": {}
+        "http_req_tls_handshaking": {
+            "p(50)": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+        },
+        "http_req_receiving": {
+            "max": 120.943331,
+            "p(50)": 0.088721,
+            "p(90)": 2.271834,
+            "p(95)": 9.176378,
+            "p(99)": 72.601071,
+            "avg": 2.4576737952559284,
+            "min": 0.007256,
+            "med": 0.088721
+        },
+        "http_reqs": {
+            "count": 801,
+            "rate": 366.2206822815762
+        },
+        "http_req_waiting": {
+            "p(50)": 56.341538,
+            "p(90)": 193.037001,
+            "p(95)": 256.355922,
+            "p(99)": 412.673978,
+            "avg": 83.56231846192259,
+            "min": 0.280047,
+            "med": 56.341538,
+            "max": 676.758611
+        },
+        "checks": {
+            "passes": 801,
+            "fails": 0,
+            "value": 1
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 801,
+            "value": 0
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(50)": 57.21258,
+            "p(90)": 220.158313,
+            "p(95)": 257.453348,
+            "p(99)": 412.767213,
+            "avg": 86.3964560062421,
+            "min": 0.329744,
+            "med": 57.21258,
+            "max": 677.146803
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration": {
+            "p(99)": 412.767213,
+            "avg": 86.3964560062421,
+            "min": 0.329744,
+            "med": 57.21258,
+            "max": 677.146803,
+            "p(50)": 57.21258,
+            "p(90)": 220.158313,
+            "p(95)": 257.453348
+        },
+        "data_received": {
+            "rate": 14591038.947771188,
+            "count": 31913605
+        },
+        "chivas_dashboard_calendar_duration": {
+            "p(90)": 234.83641,
+            "p(95)": 257.414827,
+            "p(99)": 329.8709935999998,
+            "avg": 120.81241615469611,
+            "min": 5.086028,
+            "med": 116.869573,
+            "max": 343.968712,
+            "p(50)": 116.869573
+        },
+        "chivas_paginated_bookings_duration": {
+            "med": 107.156152,
+            "max": 311.082589,
+            "p(50)": 107.156152,
+            "p(90)": 219.8765698,
+            "p(95)": 241.43472579999997,
+            "p(99)": 255.64357136000004,
+            "avg": 110.4958344736842,
+            "min": 11.795349
+        },
+        "iteration_duration": {
+            "p(50)": 128.483205,
+            "p(90)": 285.5884558,
+            "p(95)": 360.4994061000001,
+            "p(99)": 483.7575789199998,
+            "avg": 156.58354098179052,
+            "min": 51.445417,
+            "med": 128.483205,
+            "max": 729.332411
+        },
+        "data_sent": {
+            "count": 199738,
+            "rate": 91321.08194451619
+        },
+        "chivas_availability_duration": {
+            "min": 0.58307,
+            "med": 37.6244385,
+            "max": 234.801597,
+            "p(50)": 37.6244385,
+            "p(90)": 84.9673315,
+            "p(95)": 117.03438875,
+            "p(99)": 162.97205255000017,
+            "avg": 42.68415989705884
+        },
+        "chivas_error_rate": {
+            "fails": 659,
+            "passes": 0,
+            "value": 0
+        },
+        "http_req_blocked": {
+            "max": 2.424437,
+            "p(50)": 0.003586,
+            "p(90)": 0.010819,
+            "p(95)": 1.516268,
+            "p(99)": 2.153376,
+            "avg": 0.11512541697877648,
+            "min": 0.000558,
+            "med": 0.003586
+        },
+        "http_req_connecting": {
+            "p(95)": 0.784393,
+            "p(99)": 1.135777,
+            "avg": 0.058252921348314585,
+            "min": 0,
+            "med": 0,
+            "max": 1.264475,
+            "p(50)": 0,
+            "p(90)": 0
+        },
+        "http_req_sending": {
+            "med": 0.010477,
+            "max": 41.683732,
+            "p(50)": 0.010477,
+            "p(90)": 0.058119,
+            "p(95)": 0.150633,
+            "p(99)": 13.486158,
+            "avg": 0.3764637490636705,
+            "min": 0.002089
+        }
+    },
+    "setup_data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3ItYWRtaW4tMDAwMS0wMDAwLTAwMDAwMDAwMDAwMSIsImVtYWlsIjoiYWRtaW5AY2hpdmFzcnVtYmVyYXMuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzk0ODA1MzY2LCJleHAiOjE3OTQ4MzQxNjZ9.pQ-QZAKxI6-uuQDxkKkbo4hx9xS2F_6Iqz52Nf08E5w"
     }
 }

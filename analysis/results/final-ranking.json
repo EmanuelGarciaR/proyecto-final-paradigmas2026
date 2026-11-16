@@ -1,0 +1,529 @@
+{
+  "generatedAt": "2026-11-16T05:15:38.470147+00:00",
+  "weightsUsed": {
+    "latency_p95": 0.3,
+    "throughput": 0.25,
+    "memory": 0.15,
+    "cpu": 0.1,
+    "startup_time": 0.1,
+    "error_rate": 0.1
+  },
+  "winner": {
+    "backend": "java",
+    "totalScore": 89.33,
+    "justification": "Posición #1 con 89.33/100 pts: Latencia p95=112.86ms (+30.00 pts), Throughput=345.59 req/s (+25.00 pts), Memoria=91.22 MB (+13.51 pts), CPU=46.73% (+10.00 pts), Arranque=12.585s (+0.82 pts), Tasa de error=0.0000% (+10.00 pts)."
+  },
+  "globalQuantitativeRanking": [
+    {
+      "backend": "java",
+      "totalScore": 89.33,
+      "metrics": {
+        "latency_p50_ms": 6.117,
+        "latency_p95_ms": 112.858,
+        "latency_p99_ms": 136.674,
+        "latency_p95_mean_ms": 176.242,
+        "latency_p95_iqr_ms": 525.339,
+        "dashboard_calendar_p95_ms": 28.141,
+        "availability_p95_ms": 14.393,
+        "throughput_rps": 345.594,
+        "throughput_mean_rps": 328.842,
+        "memory_mb": 91.22,
+        "cpu_pct": 46.73,
+        "startup_time_s": 12.585,
+        "error_rate_pct": 0.0
+      },
+      "normalizedScores": {
+        "latency_p95": 100.0,
+        "throughput": 100.0,
+        "memory": 90.09,
+        "cpu": 100.0,
+        "startup_time": 8.25,
+        "error_rate": 100.0
+      },
+      "weightedContributions": {
+        "latency_p95": 30.0,
+        "throughput": 25.0,
+        "memory": 13.51,
+        "cpu": 10.0,
+        "startup_time": 0.82,
+        "error_rate": 10.0
+      },
+      "position": 1,
+      "justification": "Posición #1 con 89.33/100 pts: Latencia p95=112.86ms (+30.00 pts), Throughput=345.59 req/s (+25.00 pts), Memoria=91.22 MB (+13.51 pts), CPU=46.73% (+10.00 pts), Arranque=12.585s (+0.82 pts), Tasa de error=0.0000% (+10.00 pts)."
+    },
+    {
+      "backend": "scala",
+      "totalScore": 84.0,
+      "metrics": {
+        "latency_p50_ms": 8.434,
+        "latency_p95_ms": 121.496,
+        "latency_p99_ms": 157.623,
+        "latency_p95_mean_ms": 207.683,
+        "latency_p95_iqr_ms": 850.621,
+        "dashboard_calendar_p95_ms": 66.745,
+        "availability_p95_ms": 37.754,
+        "throughput_rps": 302.417,
+        "throughput_mean_rps": 287.161,
+        "memory_mb": 82.18,
+        "cpu_pct": 64.54,
+        "startup_time_s": 5.162,
+        "error_rate_pct": 0.0
+      },
+      "normalizedScores": {
+        "latency_p95": 92.89,
+        "throughput": 87.51,
+        "memory": 100.0,
+        "cpu": 72.4,
+        "startup_time": 20.11,
+        "error_rate": 100.0
+      },
+      "weightedContributions": {
+        "latency_p95": 27.87,
+        "throughput": 21.88,
+        "memory": 15.0,
+        "cpu": 7.24,
+        "startup_time": 2.01,
+        "error_rate": 10.0
+      },
+      "position": 2,
+      "justification": "Posición #2 con 84.00/100 pts: Latencia p95=121.50ms (+27.87 pts), Throughput=302.42 req/s (+21.88 pts), Memoria=82.18 MB (+15.00 pts), CPU=64.54% (+7.24 pts), Arranque=5.162s (+2.01 pts), Tasa de error=0.0000% (+10.00 pts)."
+    },
+    {
+      "backend": "express",
+      "totalScore": 45.3,
+      "metrics": {
+        "latency_p50_ms": 100.9,
+        "latency_p95_ms": 632.198,
+        "latency_p99_ms": 717.601,
+        "latency_p95_mean_ms": 662.576,
+        "latency_p95_iqr_ms": 2413.783,
+        "dashboard_calendar_p95_ms": 322.547,
+        "availability_p95_ms": 295.372,
+        "throughput_rps": 136.556,
+        "throughput_mean_rps": 125.973,
+        "memory_mb": 311.37,
+        "cpu_pct": 76.65,
+        "startup_time_s": 1.038,
+        "error_rate_pct": 0.0
+      },
+      "normalizedScores": {
+        "latency_p95": 17.85,
+        "throughput": 39.51,
+        "memory": 26.39,
+        "cpu": 60.97,
+        "startup_time": 100.0,
+        "error_rate": 100.0
+      },
+      "weightedContributions": {
+        "latency_p95": 5.36,
+        "throughput": 9.88,
+        "memory": 3.96,
+        "cpu": 6.1,
+        "startup_time": 10.0,
+        "error_rate": 10.0
+      },
+      "position": 3,
+      "justification": "Posición #3 con 45.30/100 pts: Latencia p95=632.20ms (+5.36 pts), Throughput=136.56 req/s (+9.88 pts), Memoria=311.37 MB (+3.96 pts), CPU=76.65% (+6.10 pts), Arranque=1.038s (+10.00 pts), Tasa de error=0.0000% (+10.00 pts)."
+    }
+  ],
+  "quantitativeRankingByVolume": {
+    "1000": [
+      {
+        "backend": "java",
+        "totalScore": 86.57,
+        "metrics": {
+          "latency_p50_ms": 6.893,
+          "latency_p95_ms": 133.702,
+          "latency_p99_ms": 201.583,
+          "dashboard_calendar_p95_ms": 47.636,
+          "availability_p95_ms": 39.615,
+          "throughput_rps": 367.131,
+          "memory_mb": 135.57,
+          "cpu_pct": 46.72,
+          "startup_time_s": 12.585,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 100.0,
+          "throughput": 100.0,
+          "memory": 71.7,
+          "cpu": 100.0,
+          "startup_time": 8.25,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 30.0,
+          "throughput": 25.0,
+          "memory": 10.75,
+          "cpu": 10.0,
+          "startup_time": 0.82,
+          "error_rate": 10.0
+        },
+        "position": 1,
+        "justification": "Posición #1 con 86.57/100 pts: Latencia p95=133.70ms (+30.00 pts), Throughput=367.13 req/s (+25.00 pts), Memoria=135.57 MB (+10.75 pts), CPU=46.72% (+10.00 pts), Arranque=12.585s (+0.82 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "scala",
+        "totalScore": 85.81,
+        "metrics": {
+          "latency_p50_ms": 13.637,
+          "latency_p95_ms": 142.935,
+          "latency_p99_ms": 202.473,
+          "dashboard_calendar_p95_ms": 66.87,
+          "availability_p95_ms": 62.047,
+          "throughput_rps": 331.16,
+          "memory_mb": 97.2,
+          "cpu_pct": 57.07,
+          "startup_time_s": 5.162,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 93.54,
+          "throughput": 90.2,
+          "memory": 100.0,
+          "cpu": 81.86,
+          "startup_time": 20.11,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 28.06,
+          "throughput": 22.55,
+          "memory": 15.0,
+          "cpu": 8.19,
+          "startup_time": 2.01,
+          "error_rate": 10.0
+        },
+        "position": 2,
+        "justification": "Posición #2 con 85.81/100 pts: Latencia p95=142.94ms (+28.06 pts), Throughput=331.16 req/s (+22.55 pts), Memoria=97.20 MB (+15.00 pts), CPU=57.07% (+8.19 pts), Arranque=5.162s (+2.01 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "express",
+        "totalScore": 53.52,
+        "metrics": {
+          "latency_p50_ms": 65.938,
+          "latency_p95_ms": 405.483,
+          "latency_p99_ms": 531.333,
+          "dashboard_calendar_p95_ms": 263.349,
+          "availability_p95_ms": 200.765,
+          "throughput_rps": 183.045,
+          "memory_mb": 322.28,
+          "cpu_pct": 70.21,
+          "startup_time_s": 1.038,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 32.97,
+          "throughput": 49.86,
+          "memory": 30.16,
+          "cpu": 66.54,
+          "startup_time": 100.0,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 9.89,
+          "throughput": 12.46,
+          "memory": 4.52,
+          "cpu": 6.65,
+          "startup_time": 10.0,
+          "error_rate": 10.0
+        },
+        "position": 3,
+        "justification": "Posición #3 con 53.52/100 pts: Latencia p95=405.48ms (+9.89 pts), Throughput=183.04 req/s (+12.46 pts), Memoria=322.28 MB (+4.52 pts), CPU=70.21% (+6.65 pts), Arranque=1.038s (+10.00 pts), Tasa de error=0.0000% (+10.00 pts)."
+      }
+    ],
+    "100000": [
+      {
+        "backend": "scala",
+        "totalScore": 87.99,
+        "metrics": {
+          "latency_p50_ms": 20.247,
+          "latency_p95_ms": 147.663,
+          "latency_p99_ms": 204.356,
+          "dashboard_calendar_p95_ms": 82.958,
+          "availability_p95_ms": 65.718,
+          "throughput_rps": 312.452,
+          "memory_mb": 73.54,
+          "cpu_pct": 58.21,
+          "startup_time_s": 5.162,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 100.0,
+          "throughput": 91.63,
+          "memory": 100.0,
+          "cpu": 80.67,
+          "startup_time": 20.11,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 30.0,
+          "throughput": 22.91,
+          "memory": 15.0,
+          "cpu": 8.07,
+          "startup_time": 2.01,
+          "error_rate": 10.0
+        },
+        "position": 1,
+        "justification": "Posición #1 con 87.99/100 pts: Latencia p95=147.66ms (+30.00 pts), Throughput=312.45 req/s (+22.91 pts), Memoria=73.54 MB (+15.00 pts), CPU=58.21% (+8.07 pts), Arranque=5.162s (+2.01 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "java",
+        "totalScore": 87.16,
+        "metrics": {
+          "latency_p50_ms": 9.605,
+          "latency_p95_ms": 151.208,
+          "latency_p99_ms": 256.522,
+          "dashboard_calendar_p95_ms": 70.395,
+          "availability_p95_ms": 62.773,
+          "throughput_rps": 341.0,
+          "memory_mb": 91.6,
+          "cpu_pct": 46.96,
+          "startup_time_s": 12.585,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 97.66,
+          "throughput": 100.0,
+          "memory": 80.28,
+          "cpu": 100.0,
+          "startup_time": 8.25,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 29.3,
+          "throughput": 25.0,
+          "memory": 12.04,
+          "cpu": 10.0,
+          "startup_time": 0.82,
+          "error_rate": 10.0
+        },
+        "position": 2,
+        "justification": "Posición #2 con 87.16/100 pts: Latencia p95=151.21ms (+29.30 pts), Throughput=341.00 req/s (+25.00 pts), Memoria=91.60 MB (+12.04 pts), CPU=46.96% (+10.00 pts), Arranque=12.585s (+0.82 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "express",
+        "totalScore": 49.7,
+        "metrics": {
+          "latency_p50_ms": 107.242,
+          "latency_p95_ms": 447.718,
+          "latency_p99_ms": 698.513,
+          "dashboard_calendar_p95_ms": 345.022,
+          "availability_p95_ms": 285.365,
+          "throughput_rps": 134.237,
+          "memory_mb": 312.53,
+          "cpu_pct": 72.88,
+          "startup_time_s": 1.038,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 32.98,
+          "throughput": 39.37,
+          "memory": 23.53,
+          "cpu": 64.43,
+          "startup_time": 100.0,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 9.89,
+          "throughput": 9.84,
+          "memory": 3.53,
+          "cpu": 6.44,
+          "startup_time": 10.0,
+          "error_rate": 10.0
+        },
+        "position": 3,
+        "justification": "Posición #3 con 49.70/100 pts: Latencia p95=447.72ms (+9.89 pts), Throughput=134.24 req/s (+9.84 pts), Memoria=312.53 MB (+3.53 pts), CPU=72.88% (+6.44 pts), Arranque=1.038s (+10.00 pts), Tasa de error=0.0000% (+10.00 pts)."
+      }
+    ],
+    "1000000": [
+      {
+        "backend": "java",
+        "totalScore": 90.82,
+        "metrics": {
+          "latency_p50_ms": 22.402,
+          "latency_p95_ms": 243.815,
+          "latency_p99_ms": 321.679,
+          "dashboard_calendar_p95_ms": 203.853,
+          "availability_p95_ms": 106.527,
+          "throughput_rps": 278.395,
+          "memory_mb": 77.93,
+          "cpu_pct": 52.64,
+          "startup_time_s": 12.585,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 100.0,
+          "throughput": 100.0,
+          "memory": 100.0,
+          "cpu": 100.0,
+          "startup_time": 8.25,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 30.0,
+          "throughput": 25.0,
+          "memory": 15.0,
+          "cpu": 10.0,
+          "startup_time": 0.82,
+          "error_rate": 10.0
+        },
+        "position": 1,
+        "justification": "Posición #1 con 90.82/100 pts: Latencia p95=243.81ms (+30.00 pts), Throughput=278.39 req/s (+25.00 pts), Memoria=77.93 MB (+15.00 pts), CPU=52.64% (+10.00 pts), Arranque=12.585s (+0.82 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "scala",
+        "totalScore": 75.05,
+        "metrics": {
+          "latency_p50_ms": 47.496,
+          "latency_p95_ms": 332.451,
+          "latency_p99_ms": 431.89,
+          "dashboard_calendar_p95_ms": 337.395,
+          "availability_p95_ms": 268.34,
+          "throughput_rps": 217.872,
+          "memory_mb": 86.86,
+          "cpu_pct": 65.71,
+          "startup_time_s": 5.162,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 73.34,
+          "throughput": 78.26,
+          "memory": 89.72,
+          "cpu": 80.11,
+          "startup_time": 20.11,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 22.0,
+          "throughput": 19.57,
+          "memory": 13.46,
+          "cpu": 8.01,
+          "startup_time": 2.01,
+          "error_rate": 10.0
+        },
+        "position": 2,
+        "justification": "Posición #2 con 75.05/100 pts: Latencia p95=332.45ms (+22.00 pts), Throughput=217.87 req/s (+19.57 pts), Memoria=86.86 MB (+13.46 pts), CPU=65.71% (+8.01 pts), Arranque=5.162s (+2.01 pts), Tasa de error=0.0000% (+10.00 pts)."
+      },
+      {
+        "backend": "express",
+        "totalScore": 42.33,
+        "metrics": {
+          "latency_p50_ms": 329.506,
+          "latency_p95_ms": 1134.527,
+          "latency_p99_ms": 1576.698,
+          "dashboard_calendar_p95_ms": 1006.236,
+          "availability_p95_ms": 704.696,
+          "throughput_rps": 60.637,
+          "memory_mb": 291.51,
+          "cpu_pct": 82.05,
+          "startup_time_s": 1.038,
+          "error_rate_pct": 0.0
+        },
+        "normalizedScores": {
+          "latency_p95": 21.49,
+          "throughput": 21.78,
+          "memory": 26.73,
+          "cpu": 64.16,
+          "startup_time": 100.0,
+          "error_rate": 100.0
+        },
+        "weightedContributions": {
+          "latency_p95": 6.45,
+          "throughput": 5.45,
+          "memory": 4.01,
+          "cpu": 6.42,
+          "startup_time": 10.0,
+          "error_rate": 10.0
+        },
+        "position": 3,
+        "justification": "Posición #3 con 42.33/100 pts: Latencia p95=1134.53ms (+6.45 pts), Throughput=60.64 req/s (+5.45 pts), Memoria=291.51 MB (+4.01 pts), CPU=82.05% (+6.42 pts), Arranque=1.038s (+10.00 pts), Tasa de error=0.0000% (+10.00 pts)."
+      }
+    ]
+  },
+  "qualitativeEvaluationSeparate": {
+    "generatedAt": "2026-11-16T04:27:51.921Z",
+    "rule": {
+      "description": "Puntaje Cualitativo = 0.25 * (min_SLOC / SLOC) + 0.25 * (min_CC_density / CC_density) + 0.30 * (Cov / max_Cov) + 0.20 * (FP_density / max_FP_density)",
+      "weights": {
+        "slocConciseness": 0.25,
+        "cyclomaticSimplicity": 0.25,
+        "testCoverage": 0.3,
+        "functionalExpressiveness": 0.2
+      }
+    },
+    "ranking": [
+      {
+        "backend": "scala",
+        "filesCount": 8,
+        "totalLines": 2377,
+        "blankLines": 308,
+        "commentLines": 16,
+        "sloc": 2053,
+        "cyclomaticComplexityTotal": 256,
+        "ccPer100Sloc": 12.47,
+        "functionalConstructs": 125,
+        "fpPer100Sloc": 6.09,
+        "coverage": {
+          "lineCoveragePct": 54.58,
+          "branchCoveragePct": 45.97,
+          "tool": "sbt-scoverage 2.2.1 (scoverage.xml)"
+        },
+        "scores": {
+          "concisenessScore": 100,
+          "simplicityScore": 83.64,
+          "coverageScore": 90.66,
+          "functionalExpressivenessScore": 100,
+          "totalQualitativeScore": 93.11
+        }
+      },
+      {
+        "backend": "java",
+        "filesCount": 10,
+        "totalLines": 2805,
+        "blankLines": 352,
+        "commentLines": 17,
+        "sloc": 2436,
+        "cyclomaticComplexityTotal": 282,
+        "ccPer100Sloc": 11.58,
+        "functionalConstructs": 36,
+        "fpPer100Sloc": 1.48,
+        "coverage": {
+          "lineCoveragePct": 60.2,
+          "branchCoveragePct": 37.1,
+          "tool": "JaCoCo 0.8.12 (jacoco.xml)"
+        },
+        "scores": {
+          "concisenessScore": 84.28,
+          "simplicityScore": 90.07,
+          "coverageScore": 100,
+          "functionalExpressivenessScore": 24.3,
+          "totalQualitativeScore": 78.45
+        }
+      },
+      {
+        "backend": "express",
+        "filesCount": 79,
+        "totalLines": 4431,
+        "blankLines": 574,
+        "commentLines": 491,
+        "sloc": 3366,
+        "cyclomaticComplexityTotal": 351,
+        "ccPer100Sloc": 10.43,
+        "functionalConstructs": 25,
+        "fpPer100Sloc": 0.74,
+        "coverage": {
+          "lineCoveragePct": 58.4,
+          "branchCoveragePct": 51.2,
+          "tool": "node:test (42 assertions across 11 suites)"
+        },
+        "scores": {
+          "concisenessScore": 60.99,
+          "simplicityScore": 100,
+          "coverageScore": 97.01,
+          "functionalExpressivenessScore": 12.15,
+          "totalQualitativeScore": 71.78
+        }
+      }
+    ]
+  }
+}
