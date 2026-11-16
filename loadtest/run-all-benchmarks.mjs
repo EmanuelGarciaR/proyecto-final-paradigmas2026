@@ -15,6 +15,7 @@
  *    memoria residente MB, tiempo de arranque s, y GC pause / Event Loop lag).
  */
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { ensureVolumeSnapshot, restoreDatasetVolume } from "./generate-dataset.mjs";
@@ -26,6 +27,29 @@ const PG_CONTAINER = process.env.PG_CONTAINER || "chivas-postgres-replica";
 const PG_USER = process.env.POSTGRES_USER || "chivas";
 const PG_DB = process.env.POSTGRES_DB || "chivas_rumberas";
 const K6_CONTAINER = "chivas-k6-runner";
+const JWT_SECRET =
+  process.env.JWT_SECRET || "chivas_rumberas_super_secret_jwt_key_2026_benchmark";
+
+function createAdminJwtToken() {
+  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const now = Math.floor(Date.now() / 1000);
+  const payload = Buffer.from(
+    JSON.stringify({
+      sub: "usr-admin-0001-0000-000000000001",
+      email: "admin@chivasrumberas.com",
+      role: "admin",
+      iat: now,
+      exp: now + 8 * 3600,
+    })
+  ).toString("base64url");
+  const sig = crypto
+    .createHmac("sha256", JWT_SECRET)
+    .update(`${header}.${payload}`)
+    .digest("base64url");
+  return `${header}.${payload}.${sig}`;
+}
+
+const ADMIN_TOKEN = createAdminJwtToken();
 
 const ROTATED_ORDERS = [
   ["express", "java", "scala"],
@@ -128,6 +152,7 @@ function execK6InRunner({ backendCfg, scenarioName, scenarioCfg, volume, summary
     `-e TARGET_URL=${backendCfg.dockerUrl}`,
     `-e SCENARIO_TYPE=${scenarioName}`,
     `-e VOLUME=${volume}`,
+    `-e ADMIN_TOKEN=${ADMIN_TOKEN}`,
   ];
 
   if (scenarioName === "spike" && Array.isArray(scenarioCfg.stages)) {

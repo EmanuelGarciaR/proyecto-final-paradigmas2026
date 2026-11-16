@@ -67,6 +67,9 @@ export const options = {
 http.setResponseCallback(http.expectedStatuses({ min: 200, max: 299 }, 409));
 
 export function setup() {
+  if (__ENV.ADMIN_TOKEN && __ENV.ADMIN_TOKEN.length > 10) {
+    return { token: __ENV.ADMIN_TOKEN };
+  }
   const loginRes = http.post(
     `${TARGET_URL}/auth/login`,
     JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASSWORD }),

@@ -102,7 +102,7 @@ export function ensureVolumeSnapshot(volume, seed = DEFAULT_SEED) {
       'cliente' || gs || '@benchmark.chivas.co' AS "customerEmail",
       '300' || LPAD(((1000000 + ((gs * 7919 + ${seed}) % 8999999)))::text, 7, '0') AS "customerPhone",
       15 + ((gs * 13 + ${seed}) % 25) AS "guestCount",
-      (TIMESTAMP '2026-11-18 00:00:00' + (((gs * 17 + ${seed}) % 730) || ' days')::interval) AS "eventDate",
+      (TIMESTAMP '2026-11-18 00:00:00' + (((gs * 17 + ${seed}) % 7300) || ' days')::interval) AS "eventDate",
       LPAD((8 + ((gs * 7 + ${seed}) % 12))::text, 2, '0') || ':00' AS "startTime",
       (3 + ((gs + ${seed}) % 2))::double precision AS "durationHours",
       ((280000 + ((gs % 4) * 20000)) * (3 + ((gs + ${seed}) % 2)))::double precision AS "totalPrice",
