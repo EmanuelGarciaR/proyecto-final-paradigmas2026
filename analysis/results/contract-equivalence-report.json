@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-11-16T03:53:02.052Z",
+  "status": "PASSED",
+  "backends": [
+    {
+      "name": "express",
+      "url": "http://localhost:3001"
+    },
+    {
+      "name": "java",
+      "url": "http://localhost:3002"
+    },
+    {
+      "name": "scala",
+      "url": "http://localhost:3003"
+    }
+  ],
+  "suiteSummary": {
+    "express": {
+      "contractSuitePassed": true
+    },
+    "java": {
+      "contractSuitePassed": true
+    },
+    "scala": {
+      "contractSuitePassed": true
+    }
+  },
+  "comparisons": [
+    {
+      "check": "loginUser",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "loginBad",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "chivasAll",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "chivaById",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "chivaMissing",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "travels",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "calendarNov",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "calendarEmpty",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "calendarInvalid",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "availDay20",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "availMissingParam",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "bookingsPage1",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "bookingsFiltered",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "trackOk",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "trackNotFound",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "hasHttpCounterMetric",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "hasHttpHistogramMetric",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    },
+    {
+      "check": "hasStartupMetric",
+      "expressEqualsJava": true,
+      "expressEqualsScala": true
+    }
+  ]
+}
