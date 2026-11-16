@@ -18,6 +18,7 @@ backend-scala/project/project/
 backend-scala/.bsp/
 backend-scala/.bloop/
 backend-scala/.metals/
+backend-scala/.sbt-wrapper/
 
 # Python (Analysis / Virtualenv)
 __pycache__/
