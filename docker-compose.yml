@@ -69,7 +69,6 @@ services:
       dockerfile: Dockerfile
     container_name: chivas-backend-java
     restart: unless-stopped
-    profiles: ["all", "java"]
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -92,6 +91,11 @@ services:
       - "${JAVA_PORT:-3002}:3000"
     cpus: ${BACKEND_CPUS:-1.0}
     mem_limit: ${BACKEND_MEM_LIMIT:-512m}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - chivas-net
 
