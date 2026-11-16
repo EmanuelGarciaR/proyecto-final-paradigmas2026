@@ -1,0 +1,1233 @@
+openapi: 3.0.3
+info:
+  title: Chivas Rumberas API — Contrato Real (Homologado)
+  version: 1.0.0
+  description: |
+    Contrato OpenAPI 3.0.3 extraído directamente del código fuente de `/backend-express`.
+    Este contrato rige de forma idéntica para las tres implementaciones:
+    - **Express (Node.js / TypeScript)** (`/backend-express`)
+    - **Java (Spring Boot)** (`/backend-java`)
+    - **Scala 3 (http4s)** (`/backend-scala`)
+
+servers:
+  - url: http://localhost:3000
+    description: Servidor local / contenedor por defecto
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Token JWT firmado con `JWT_SECRET` (HS256).
+        Payload: `{ sub: string, email: string, role: "admin" | "operator", iat: number, exp: number }`.
+
+  schemas:
+    ChivaStatus:
+      type: string
+      enum: [available, maintenance, retired]
+
+    BookingStatus:
+      type: string
+      enum: [pending, confirmed, cancelled, completed]
+
+    CalendarSyncStatus:
+      type: string
+      enum: [pending, synced, failed]
+
+    UserRole:
+      type: string
+      enum: [admin, operator]
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [type, message]
+          properties:
+            type:
+              type: string
+              enum:
+                - ValidationError
+                - InvalidCredentialsError
+                - InvalidTokenError
+                - UnauthorizedError
+                - ChivaNotFoundError
+                - BookingNotFoundError
+                - TravelNotFoundError
+                - ChivaNotAvailableError
+                - BookingConflictError
+                - ChivaHasActiveBookingsError
+                - InvalidBookingStatusTransitionError
+                - TooManyRequestsError
+                - InternalServerError
+            message:
+              type: string
+
+    HealthResponse:
+      type: object
+      required: [status, timestamp]
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-11-15T21:30:00.000Z"
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: admin@chivasrumberas.com
+        password:
+          type: string
+          example: Admin123*Chiva
+
+    AuthResponse:
+      type: object
+      required: [accessToken, user]
+      properties:
+        accessToken:
+          type: string
+        user:
+          type: object
+          required: [id, email, role]
+          properties:
+            id:
+              type: string
+              format: uuid
+            email:
+              type: string
+              format: email
+            role:
+              $ref: "#/components/schemas/UserRole"
+
+    ChivaResponse:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - capacity
+        - imageUrls
+        - pricePerHour
+        - status
+        - features
+      properties:
+        id:
+          type: string
+          example: la-coqueta-1954
+        name:
+          type: string
+          example: La Coqueta
+        description:
+          type: string
+        capacity:
+          type: integer
+          minimum: 1
+          example: 50
+        imageUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        pricePerHour:
+          type: number
+          example: 280000
+        status:
+          $ref: "#/components/schemas/ChivaStatus"
+        features:
+          type: array
+          items:
+            type: string
+
+    CreateChivaRequest:
+      type: object
+      required: [name, description, capacity, pricePerHour]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          minLength: 1
+        capacity:
+          type: integer
+          minimum: 1
+        pricePerHour:
+          type: number
+          exclusiveMinimum: 0
+        features:
+          type: array
+          items:
+            type: string
+          default: []
+        status:
+          $ref: "#/components/schemas/ChivaStatus"
+          default: available
+        imageUrls:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            format: uri
+          default: []
+
+    UpdateChivaRequest:
+      type: object
+      description: Debe incluir al menos un campo.
+      properties:
+        name:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          minLength: 1
+        capacity:
+          type: integer
+          minimum: 1
+        pricePerHour:
+          type: number
+          exclusiveMinimum: 0
+        features:
+          type: array
+          items:
+            type: string
+        status:
+          $ref: "#/components/schemas/ChivaStatus"
+        imageUrls:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            format: uri
+
+    UpdateChivaStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: "#/components/schemas/ChivaStatus"
+
+    TravelResponse:
+      type: object
+      required: [id, name, description, durationHours, highlights]
+      properties:
+        id:
+          type: string
+          example: trv_alumbrados
+        name:
+          type: string
+          example: Ruta Navideña y Alumbrados
+        description:
+          type: string
+        durationHours:
+          type: number
+          example: 4
+        highlights:
+          type: array
+          items:
+            type: string
+
+    OccupiedSlot:
+      type: object
+      required: [startTime, endTime, durationHours]
+      properties:
+        startTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):([0-5]\d)$'
+          example: "18:00"
+        endTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):([0-5]\d)$'
+          example: "22:00"
+        durationHours:
+          type: number
+          example: 4
+
+    AvailabilityResponse:
+      type: object
+      required: [chivaId, date, occupiedSlots, isFullyBooked]
+      properties:
+        chivaId:
+          type: string
+        date:
+          type: string
+          example: "2026-11-20"
+        occupiedSlots:
+          type: array
+          items:
+            $ref: "#/components/schemas/OccupiedSlot"
+        isFullyBooked:
+          type: boolean
+
+    CreateBookingRequest:
+      type: object
+      required:
+        - chivaId
+        - travelId
+        - customerName
+        - customerEmail
+        - customerPhone
+        - guestCount
+        - eventDate
+        - startTime
+        - durationHours
+      properties:
+        chivaId:
+          type: string
+          example: la-coqueta-1954
+        travelId:
+          type: string
+          example: trv_alumbrados
+        customerName:
+          type: string
+          example: Carolina Montoya
+        customerEmail:
+          type: string
+          format: email
+          example: carolina.montoya@ejemplo.com
+        customerPhone:
+          type: string
+          example: "3001234567"
+        guestCount:
+          type: integer
+          minimum: 1
+          example: 30
+        eventDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          example: "2026-11-25"
+        startTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):([0-5]\d)$'
+          example: "18:00"
+        durationHours:
+          type: number
+          minimum: 1
+          maximum: 12
+          example: 4
+        notes:
+          type: string
+          nullable: true
+
+    BookingResponse:
+      type: object
+      required:
+        - id
+        - chivaId
+        - chivaName
+        - travelId
+        - travelName
+        - customerName
+        - customerEmail
+        - customerPhone
+        - guestCount
+        - eventDate
+        - startTime
+        - endTime
+        - durationHours
+        - totalPrice
+        - status
+        - calendarSyncStatus
+        - createdAt
+      properties:
+        id:
+          type: string
+          example: CR-8P2Q9M
+        chivaId:
+          type: string
+        chivaName:
+          type: string
+        travelId:
+          type: string
+        travelName:
+          type: string
+        customerName:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        customerPhone:
+          type: string
+        guestCount:
+          type: integer
+        eventDate:
+          type: string
+          example: "2026-11-20"
+        startTime:
+          type: string
+          example: "18:00"
+        endTime:
+          type: string
+          example: "22:00"
+        durationHours:
+          type: number
+        totalPrice:
+          type: number
+        status:
+          $ref: "#/components/schemas/BookingStatus"
+        notes:
+          type: string
+          nullable: true
+        calendarSyncStatus:
+          $ref: "#/components/schemas/CalendarSyncStatus"
+        createdAt:
+          type: string
+          format: date-time
+
+    PaginatedBookingsResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/BookingResponse"
+        meta:
+          type: object
+          required: [page, limit, total, totalPages]
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+            totalPages:
+              type: integer
+
+    TrackBookingResponse:
+      type: object
+      required:
+        - id
+        - code
+        - status
+        - createdAt
+        - chivaId
+        - chivaName
+        - travelId
+        - travelName
+        - eventDate
+        - startTime
+        - endTime
+        - durationHours
+        - guestCount
+        - totalPrice
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        status:
+          $ref: "#/components/schemas/BookingStatus"
+        createdAt:
+          type: string
+          format: date-time
+        chivaId:
+          type: string
+        chivaName:
+          type: string
+        travelId:
+          type: string
+        travelName:
+          type: string
+        eventDate:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        durationHours:
+          type: number
+        guestCount:
+          type: integer
+        totalPrice:
+          type: number
+
+    UpdateBookingStatusRequest:
+      type: object
+      description: |
+        Requiere `status` (`confirmed`, `cancelled`, `completed`) o `totalPrice` / `price` (> 0).
+        Cuando se envía `totalPrice`, también se acepta `status: "pending"` o sin `status` para actualizar precio en el estado actual.
+      properties:
+        status:
+          $ref: "#/components/schemas/BookingStatus"
+        totalPrice:
+          oneOf:
+            - type: number
+            - type: string
+        price:
+          oneOf:
+            - type: number
+            - type: string
+
+    CalendarSlot:
+      type: object
+      required:
+        - bookingId
+        - startTime
+        - endTime
+        - durationHours
+        - customerName
+        - travelName
+        - guestCount
+      properties:
+        bookingId:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        durationHours:
+          type: number
+        customerName:
+          type: string
+        travelName:
+          type: string
+        guestCount:
+          type: integer
+        endsNextDay:
+          type: boolean
+          description: Presente y `true` únicamente cuando `startTime + durationHours > 24:00`.
+
+    CalendarDayChiva:
+      type: object
+      required: [chivaId, chivaName, slots]
+      properties:
+        chivaId:
+          type: string
+        chivaName:
+          type: string
+        slots:
+          type: array
+          items:
+            $ref: "#/components/schemas/CalendarSlot"
+
+    CalendarDay:
+      type: object
+      required: [date, chivasCount, chivas]
+      properties:
+        date:
+          type: string
+          example: "2026-11-20"
+        chivasCount:
+          type: integer
+        chivas:
+          type: array
+          items:
+            $ref: "#/components/schemas/CalendarDayChiva"
+
+    BookingsCalendarResponse:
+      type: object
+      required: [month, chivas, days]
+      properties:
+        month:
+          type: string
+          example: "2026-11"
+        chivas:
+          type: array
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+        days:
+          type: array
+          items:
+            $ref: "#/components/schemas/CalendarDay"
+
+    UploadSignatureResponse:
+      type: object
+      required:
+        - cloudName
+        - apiKey
+        - timestamp
+        - signature
+        - folder
+        - allowedFormats
+        - maxFileSize
+      properties:
+        cloudName:
+          type: string
+        apiKey:
+          type: string
+        timestamp:
+          type: integer
+        signature:
+          type: string
+        folder:
+          type: string
+          example: chivas-rumberas/chivas
+        allowedFormats:
+          type: array
+          items:
+            type: string
+          example: [jpg, png, webp]
+        maxFileSize:
+          type: integer
+          example: 5242880
+
+paths:
+  /health:
+    get:
+      summary: Health check del servicio
+      tags: [Observability]
+      responses:
+        "200":
+          description: Servicio saludable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /metrics:
+    get:
+      summary: Métricas en formato Prometheus
+      tags: [Observability]
+      responses:
+        "200":
+          description: Exposición de métricas Prometheus (prom-client / Micrometer)
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /auth/login:
+    post:
+      summary: Autenticación de administrador u operador
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Credenciales inválidas (`InvalidCredentialsError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Límite de intentos excedido (`TooManyRequestsError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /chivas:
+    get:
+      summary: Listar chivas (opcionalmente filtradas por estado)
+      tags: [Chivas]
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            $ref: "#/components/schemas/ChivaStatus"
+      responses:
+        "200":
+          description: Lista de chivas ordenada por `createdAt` ascendente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChivaResponse"
+    post:
+      summary: Crear una nueva chiva (Solo admin)
+      tags: [Chivas]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChivaRequest"
+      responses:
+        "201":
+          description: Chiva creada con ID slugificado único
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChivaResponse"
+        "400":
+          description: Error de validación (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token ausente o inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Rol sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /chivas/{id}:
+    get:
+      summary: Obtener detalle de una chiva por ID
+      tags: [Chivas]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalle de la chiva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChivaResponse"
+        "404":
+          description: Chiva no encontrada (`ChivaNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      summary: Actualizar campos de una chiva (Solo admin)
+      tags: [Chivas]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChivaRequest"
+      responses:
+        "200":
+          description: Chiva actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChivaResponse"
+        "400":
+          description: Datos inválidos (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Chiva no encontrada (`ChivaNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Borrado lógico de una chiva (pasa a `retired`, solo admin)
+      tags: [Chivas]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Chiva marcada como `retired`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChivaResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Chiva no encontrada (`ChivaNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Tiene reservas futuras activas (`ChivaHasActiveBookingsError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /chivas/{id}/status:
+    patch:
+      summary: Cambiar el estado de una chiva (Solo admin)
+      tags: [Chivas]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChivaStatusRequest"
+      responses:
+        "200":
+          description: Estado de chiva actualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChivaResponse"
+        "400":
+          description: Estado inválido o ausente (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Chiva no encontrada (`ChivaNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /travels:
+    get:
+      summary: Listar todos los recorridos activos (`isActive = true`)
+      tags: [Travels]
+      responses:
+        "200":
+          description: Lista de recorridos ordenada por `name` ascendente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TravelResponse"
+
+  /bookings/availability:
+    get:
+      summary: Consultar horarios ocupados y disponibilidad de una chiva en una fecha
+      tags: [Bookings]
+      parameters:
+        - in: query
+          name: chivaId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            example: "2026-11-20"
+      responses:
+        "200":
+          description: Disponibilidad calculada para la fecha y chiva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityResponse"
+        "400":
+          description: Faltan parámetros `chivaId` o `date` (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Chiva no encontrada (`ChivaNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/track:
+    get:
+      summary: Seguimiento público de reserva por código y correo (case-insensitive)
+      tags: [Bookings]
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+            example: CR-8P2Q9M
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        "200":
+          description: Datos públicos de seguimiento de la reserva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrackBookingResponse"
+        "400":
+          description: Parámetros inválidos (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Código inexistente o correo no coincide (`BookingNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Demasiados intentos (`TooManyRequestsError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/calendar:
+    get:
+      summary: Calendario mensual de reservas confirmadas agrupadas por día y chiva (Solo admin)
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: month
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-(0[1-9]|1[0-2])$'
+            example: "2026-11"
+      responses:
+        "200":
+          description: Calendario mensual agrupado funcionalmente por día y chiva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingsCalendarResponse"
+        "400":
+          description: Parámetro `month` ausente o con formato distinto a `YYYY-MM` (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings:
+    post:
+      summary: Crear una nueva reserva de chiva (Público)
+      tags: [Bookings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingRequest"
+      responses:
+        "201":
+          description: Reserva creada en estado `pending`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "400":
+          description: Error de validación de fecha, hora o capacidad (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Chiva o recorrido no encontrado (`ChivaNotFoundError` / `TravelNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Chiva no disponible o conflicto de horario (`ChivaNotAvailableError` / `BookingConflictError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Listar reservas paginadas y filtradas para el panel de administración (Solo admin)
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+        - in: query
+          name: status
+          required: false
+          schema:
+            $ref: "#/components/schemas/BookingStatus"
+        - in: query
+          name: q
+          required: false
+          description: Búsqueda case-insensitive por `id`, `customerName` o `customerEmail`
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Listado paginado ordenado por `createdAt DESC, id DESC`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedBookingsResponse"
+        "400":
+          description: Parámetros de consulta inválidos (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/{id}:
+    get:
+      summary: Obtener detalle de una reserva por ID (Protegido: admin u operator)
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detalle completo de la reserva
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Reserva no encontrada (`BookingNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/{id}/status:
+    patch:
+      summary: Cambiar estado y/o actualizar precio total de una reserva (Protegido: admin u operator)
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookingStatusRequest"
+      responses:
+        "200":
+          description: Reserva actualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "400":
+          description: Parámetros inválidos (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Reserva no encontrada (`BookingNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Transición de estado inválida (`InvalidBookingStatusTransitionError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/{id}/calendar-sync:
+    post:
+      summary: Reintentar sincronización manual de reserva confirmada con Google Calendar (Solo admin)
+      tags: [Bookings]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reserva tras intento de sincronización
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingResponse"
+        "400":
+          description: La reserva no está en estado `confirmed` (`ValidationError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Reserva no encontrada (`BookingNotFoundError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /uploads/signature:
+    get:
+      summary: Generar firma SHA-1 para subida directa de imágenes a Cloudinary (Solo admin)
+      tags: [Uploads]
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Firma de Cloudinary generada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadSignatureResponse"
+        "401":
+          description: Token inválido (`InvalidTokenError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Sin permisos (`UnauthorizedError`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
