@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-11-16T04:27:51.921Z",
+  "rule": {
+    "description": "Puntaje Cualitativo = 0.25 * (min_SLOC / SLOC) + 0.25 * (min_CC_density / CC_density) + 0.30 * (Cov / max_Cov) + 0.20 * (FP_density / max_FP_density)",
+    "weights": {
+      "slocConciseness": 0.25,
+      "cyclomaticSimplicity": 0.25,
+      "testCoverage": 0.3,
+      "functionalExpressiveness": 0.2
+    }
+  },
+  "ranking": [
+    {
+      "backend": "scala",
+      "filesCount": 8,
+      "totalLines": 2377,
+      "blankLines": 308,
+      "commentLines": 16,
+      "sloc": 2053,
+      "cyclomaticComplexityTotal": 256,
+      "ccPer100Sloc": 12.47,
+      "functionalConstructs": 125,
+      "fpPer100Sloc": 6.09,
+      "coverage": {
+        "lineCoveragePct": 54.58,
+        "branchCoveragePct": 45.97,
+        "tool": "sbt-scoverage 2.2.1 (scoverage.xml)"
+      },
+      "scores": {
+        "concisenessScore": 100,
+        "simplicityScore": 83.64,
+        "coverageScore": 90.66,
+        "functionalExpressivenessScore": 100,
+        "totalQualitativeScore": 93.11
+      }
+    },
+    {
+      "backend": "java",
+      "filesCount": 10,
+      "totalLines": 2805,
+      "blankLines": 352,
+      "commentLines": 17,
+      "sloc": 2436,
+      "cyclomaticComplexityTotal": 282,
+      "ccPer100Sloc": 11.58,
+      "functionalConstructs": 36,
+      "fpPer100Sloc": 1.48,
+      "coverage": {
+        "lineCoveragePct": 60.2,
+        "branchCoveragePct": 37.1,
+        "tool": "JaCoCo 0.8.12 (jacoco.xml)"
+      },
+      "scores": {
+        "concisenessScore": 84.28,
+        "simplicityScore": 90.07,
+        "coverageScore": 100,
+        "functionalExpressivenessScore": 24.3,
+        "totalQualitativeScore": 78.45
+      }
+    },
+    {
+      "backend": "express",
+      "filesCount": 79,
+      "totalLines": 4431,
+      "blankLines": 574,
+      "commentLines": 491,
+      "sloc": 3366,
+      "cyclomaticComplexityTotal": 351,
+      "ccPer100Sloc": 10.43,
+      "functionalConstructs": 25,
+      "fpPer100Sloc": 0.74,
+      "coverage": {
+        "lineCoveragePct": 58.4,
+        "branchCoveragePct": 51.2,
+        "tool": "node:test (42 assertions across 11 suites)"
+      },
+      "scores": {
+        "concisenessScore": 60.99,
+        "simplicityScore": 100,
+        "coverageScore": 97.01,
+        "functionalExpressivenessScore": 12.15,
+        "totalQualitativeScore": 71.78
+      }
+    }
+  ]
+}
