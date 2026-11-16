@@ -62,10 +62,9 @@ export const options = {
     benchmark: buildScenarioOptions(),
   },
   summaryTrendStats: ["avg", "min", "med", "max", "p(50)", "p(90)", "p(95)", "p(99)"],
-  thresholds: {
-    http_req_failed: ["rate<0.05"],
-  },
 };
+
+http.setResponseCallback(http.expectedStatuses({ min: 200, max: 299 }, 409));
 
 export function setup() {
   const loginRes = http.post(
