@@ -329,7 +329,7 @@ public class ChivasBusinessService {
                 b.status(),
                 b.notes(),
                 b.calendarSyncStatus() != null ? b.calendarSyncStatus() : "pending",
-                b.createdAt().toString()
+                Models.toIsoString(b.createdAt())
         );
     }
 
@@ -397,7 +397,7 @@ public class ChivasBusinessService {
                 booking.id(),
                 booking.id(),
                 booking.status(),
-                booking.createdAt().toString(),
+                Models.toIsoString(booking.createdAt()),
                 booking.chivaId(),
                 chivaName,
                 booking.travel(),

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +45,15 @@ public class PostgresRepositories {
         return jdbcTemplate.execute((Connection con) -> con.createArrayOf("text", safe.toArray(new String[0])));
     }
 
+    private static Instant getUtcInstant(ResultSet rs, String col) throws SQLException {
+        LocalDateTime ldt = rs.getObject(col, LocalDateTime.class);
+        return ldt != null ? ldt.toInstant(ZoneOffset.UTC) : Instant.EPOCH;
+    }
+
+    private static LocalDateTime toUtcLdt(Instant instant) {
+        return LocalDateTime.ofInstant(instant != null ? instant : Instant.now(), ZoneOffset.UTC);
+    }
+
     @Repository
     public static class PgChivaRepository implements ChivaRepository {
         private final JdbcTemplate jdbc;
@@ -61,8 +71,8 @@ public class PostgresRepositories {
                 rs.getDouble("pricePerHour"),
                 rs.getString("status"),
                 toStringList(rs.getArray("features")),
-                rs.getTimestamp("createdAt").toInstant(),
-                rs.getTimestamp("updatedAt").toInstant()
+                getUtcInstant(rs, "createdAt"),
+                getUtcInstant(rs, "updatedAt")
         );
 
         @Override
@@ -87,7 +97,7 @@ public class PostgresRepositories {
         public Chiva saveChiva(Chiva chiva) {
             Array imagesArr = createTextArray(jdbc, chiva.imageUrls());
             Array featuresArr = createTextArray(jdbc, chiva.features());
-            Timestamp now = Timestamp.from(chiva.createdAt() != null ? chiva.createdAt() : Instant.now());
+            LocalDateTime now = toUtcLdt(chiva.createdAt());
 
             jdbc.update(
                     """
@@ -204,7 +214,7 @@ public class PostgresRepositories {
                 rs.getString("name"),
                 rs.getString("email"),
                 rs.getString("phone"),
-                rs.getTimestamp("createdAt").toInstant()
+                getUtcInstant(rs, "createdAt")
         );
 
         @Override
@@ -257,7 +267,7 @@ public class PostgresRepositories {
                 rs.getString("email"),
                 rs.getString("passwordHash"),
                 rs.getString("role"),
-                rs.getTimestamp("createdAt").toInstant()
+                getUtcInstant(rs, "createdAt")
         );
 
         @Override
@@ -299,7 +309,7 @@ public class PostgresRepositories {
                 rs.getInt("guestCount"),
                 rs.getString("travelId"),
                 rs.getString("travelName"),
-                rs.getTimestamp("eventDate").toInstant(),
+                getUtcInstant(rs, "eventDate"),
                 rs.getString("startTime"),
                 rs.getDouble("durationHours"),
                 rs.getDouble("totalPrice"),
@@ -307,8 +317,8 @@ public class PostgresRepositories {
                 rs.getString("notes"),
                 rs.getString("googleEventId"),
                 rs.getString("calendarSyncStatus") != null ? rs.getString("calendarSyncStatus") : "pending",
-                rs.getTimestamp("createdAt").toInstant(),
-                rs.getTimestamp("updatedAt").toInstant()
+                getUtcInstant(rs, "createdAt"),
+                getUtcInstant(rs, "updatedAt")
         );
 
         private record ElapsedCandidate(String id, Instant eventDate, String startTime) {}
@@ -323,10 +333,10 @@ public class PostgresRepositories {
                     """,
                     (rs, i) -> new ElapsedCandidate(
                             rs.getString("id"),
-                            rs.getTimestamp("eventDate").toInstant(),
+                            getUtcInstant(rs, "eventDate"),
                             rs.getString("startTime")
                     ),
-                    Timestamp.from(upperBound)
+                    toUtcLdt(upperBound)
             );
 
             if (candidates.isEmpty()) return;
@@ -404,8 +414,8 @@ public class PostgresRepositories {
                     " WHERE b.\"status\" = 'confirmed'::\"BookingStatus\" AND b.\"eventDate\" >= ? AND b.\"eventDate\" < ? " +
                     " ORDER BY b.\"eventDate\" ASC, b.\"startTime\" ASC, b.\"id\" ASC",
                     mapper,
-                    Timestamp.from(startDate),
-                    Timestamp.from(endDate)
+                    toUtcLdt(startDate),
+                    toUtcLdt(endDate)
             );
         }
 
@@ -426,8 +436,8 @@ public class PostgresRepositories {
                     """,
                     (rs, i) -> new OccupiedSlotRecord(rs.getString("startTime"), rs.getDouble("durationHours")),
                     chivaId,
-                    Timestamp.from(start),
-                    Timestamp.from(end)
+                    toUtcLdt(start),
+                    toUtcLdt(end)
             );
         }
 
@@ -460,14 +470,14 @@ public class PostgresRepositories {
                     """,
                     Integer.class,
                     chivaId,
-                    Timestamp.from(startOfToday)
+                    toUtcLdt(startOfToday)
             );
             return count != null && count > 0;
         }
 
         @Override
         public Booking saveBooking(Booking booking) {
-            Timestamp now = Timestamp.from(booking.createdAt() != null ? booking.createdAt() : Instant.now());
+            LocalDateTime now = toUtcLdt(booking.createdAt());
             jdbc.update(
                     """
                     INSERT INTO "bookings" (
@@ -485,7 +495,7 @@ public class PostgresRepositories {
                     booking.customerEmail(),
                     booking.customerPhone(),
                     booking.guestCount(),
-                    Timestamp.from(booking.eventDate()),
+                    toUtcLdt(booking.eventDate()),
                     booking.startTime(),
                     booking.durationHours(),
                     booking.totalPrice(),

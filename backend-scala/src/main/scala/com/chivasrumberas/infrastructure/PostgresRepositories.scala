@@ -5,8 +5,8 @@ import com.chivasrumberas.domain.Domain.*
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 
 import java.net.URI
-import java.sql.{Array as SqlArray, Connection, ResultSet, Timestamp}
-import java.time.{Instant, ZoneOffset}
+import java.sql.{Array as SqlArray, Connection, PreparedStatement, ResultSet, Timestamp}
+import java.time.{Instant, LocalDateTime, ZoneOffset}
 import java.util.UUID
 import javax.sql.DataSource
 import scala.collection.mutable.ListBuffer
@@ -57,6 +57,13 @@ object JdbcHelpers:
         case arr: Array[Object] => arr.map(String.valueOf).toList
         case _                  => Nil
 
+  def getUtcInstant(rs: ResultSet, col: String): Instant =
+    val ldt = rs.getObject(col, classOf[LocalDateTime])
+    if ldt != null then ldt.toInstant(ZoneOffset.UTC) else Instant.EPOCH
+
+  def setUtcInstant(ps: PreparedStatement, index: Int, instant: Instant): Unit =
+    ps.setObject(index, LocalDateTime.ofInstant(instant, ZoneOffset.UTC))
+
 class PgChivaRepository(ds: DataSource) extends ChivaRepository:
   import JdbcHelpers.*
 
@@ -70,8 +77,8 @@ class PgChivaRepository(ds: DataSource) extends ChivaRepository:
       pricePerHour = rs.getDouble("pricePerHour"),
       status = rs.getString("status"),
       features = toStringList(rs.getArray("features")),
-      createdAt = rs.getTimestamp("createdAt").toInstant,
-      updatedAt = rs.getTimestamp("updatedAt").toInstant
+      createdAt = getUtcInstant(rs, "createdAt"),
+      updatedAt = getUtcInstant(rs, "updatedAt")
     )
 
   override def findChivaAll(status: Option[String]): List[Chiva] =
@@ -105,7 +112,6 @@ class PgChivaRepository(ds: DataSource) extends ChivaRepository:
         """INSERT INTO "chivas" ("id", "name", "description", "capacity", "imageUrls", "pricePerHour", "status", "features", "createdAt", "updatedAt")
            VALUES (?, ?, ?, ?, ?, ?, ?::"ChivaStatus", ?, ?, ?)"""
       Using.resource(conn.prepareStatement(sql)) { ps =>
-        val now = Timestamp.from(chiva.createdAt)
         ps.setString(1, chiva.id)
         ps.setString(2, chiva.name)
         ps.setString(3, chiva.description)
@@ -114,8 +120,8 @@ class PgChivaRepository(ds: DataSource) extends ChivaRepository:
         ps.setDouble(6, chiva.pricePerHour)
         ps.setString(7, chiva.status)
         ps.setArray(8, conn.createArrayOf("text", chiva.features.toArray))
-        ps.setTimestamp(9, now)
-        ps.setTimestamp(10, now)
+        setUtcInstant(ps, 9, chiva.createdAt)
+        setUtcInstant(ps, 10, chiva.createdAt)
         ps.executeUpdate()
       }
     }
@@ -225,7 +231,7 @@ class PgCustomerRepository(ds: DataSource) extends CustomerRepository:
       name = rs.getString("name"),
       email = rs.getString("email"),
       phone = rs.getString("phone"),
-      createdAt = rs.getTimestamp("createdAt").toInstant
+      createdAt = getUtcInstant(rs, "createdAt")
     )
 
   override def findByEmail(email: String): Option[Customer] =
@@ -278,7 +284,7 @@ class PgUserRepository(ds: DataSource) extends UserRepository:
       email = rs.getString("email"),
       passwordHash = rs.getString("passwordHash"),
       role = rs.getString("role"),
-      createdAt = rs.getTimestamp("createdAt").toInstant
+      createdAt = getUtcInstant(rs, "createdAt")
     )
 
   override def findUserByEmail(email: String): Option[User] =
@@ -322,7 +328,7 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
       guestCount = rs.getInt("guestCount"),
       travel = rs.getString("travelId"),
       travelName = Option(rs.getString("travelName")),
-      eventDate = rs.getTimestamp("eventDate").toInstant,
+      eventDate = getUtcInstant(rs, "eventDate"),
       startTime = rs.getString("startTime"),
       durationHours = rs.getDouble("durationHours"),
       totalPrice = rs.getDouble("totalPrice"),
@@ -330,13 +336,13 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
       notes = Option(rs.getString("notes")),
       googleEventId = Option(rs.getString("googleEventId")),
       calendarSyncStatus = Option(rs.getString("calendarSyncStatus")).getOrElse("pending"),
-      createdAt = rs.getTimestamp("createdAt").toInstant,
-      updatedAt = rs.getTimestamp("updatedAt").toInstant
+      createdAt = getUtcInstant(rs, "createdAt"),
+      updatedAt = getUtcInstant(rs, "updatedAt")
     )
 
   private def completeElapsedConfirmedBookings(now: Instant = Instant.now()): Unit =
     withConnection(ds) { conn =>
-      val upperBound = Timestamp.from(now.plusSeconds(24L * 3600L))
+      val upperBound = now.plusSeconds(24L * 3600L)
       val candidates = ListBuffer.empty[(String, Instant, String)]
       Using.resource(
         conn.prepareStatement(
@@ -344,10 +350,10 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
              WHERE "status" = 'confirmed'::"BookingStatus" AND "eventDate" <= ?"""
         )
       ) { ps =>
-        ps.setTimestamp(1, upperBound)
+        setUtcInstant(ps, 1, upperBound)
         Using.resource(ps.executeQuery()) { rs =>
           while rs.next() do
-            candidates += ((rs.getString("id"), rs.getTimestamp("eventDate").toInstant, rs.getString("startTime")))
+            candidates += ((rs.getString("id"), getUtcInstant(rs, "eventDate"), rs.getString("startTime")))
         }
       }
 
@@ -429,8 +435,8 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
             WHERE b."status" = 'confirmed'::"BookingStatus" AND b."eventDate" >= ? AND b."eventDate" < ?
             ORDER BY b."eventDate" ASC, b."startTime" ASC, b."id" ASC"""
       Using.resource(conn.prepareStatement(sql)) { ps =>
-        ps.setTimestamp(1, Timestamp.from(startDate))
-        ps.setTimestamp(2, Timestamp.from(endDate))
+        setUtcInstant(ps, 1, startDate)
+        setUtcInstant(ps, 2, endDate)
         Using.resource(ps.executeQuery()) { rs =>
           val buf = ListBuffer.empty[Booking]
           while rs.next() do buf += mapRow(rs)
@@ -451,8 +457,8 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
              AND "eventDate" >= ? AND "eventDate" < ?"""
       Using.resource(conn.prepareStatement(sql)) { ps =>
         ps.setString(1, chivaId)
-        ps.setTimestamp(2, Timestamp.from(start))
-        ps.setTimestamp(3, Timestamp.from(end))
+        setUtcInstant(ps, 2, start)
+        setUtcInstant(ps, 3, end)
         Using.resource(ps.executeQuery()) { rs =>
           val buf = ListBuffer.empty[OccupiedSlotRecord]
           while rs.next() do buf += OccupiedSlotRecord(rs.getString("startTime"), rs.getDouble("durationHours"))
@@ -482,7 +488,7 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
              AND "eventDate" >= ?"""
       Using.resource(conn.prepareStatement(sql)) { ps =>
         ps.setString(1, chivaId)
-        ps.setTimestamp(2, Timestamp.from(startOfToday))
+        setUtcInstant(ps, 2, startOfToday)
         Using.resource(ps.executeQuery()) { rs =>
           rs.next() && rs.getInt(1) > 0
         }
@@ -499,7 +505,6 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
            )
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::"BookingStatus", ?, 'pending'::"CalendarSyncStatus", ?, ?)"""
       Using.resource(conn.prepareStatement(sql)) { ps =>
-        val now = Timestamp.from(booking.createdAt)
         ps.setString(1, booking.id)
         ps.setString(2, booking.chivaId)
         ps.setString(3, booking.travel)
@@ -508,14 +513,14 @@ class PgBookingRepository(ds: DataSource) extends BookingRepository:
         ps.setString(6, booking.customerEmail)
         ps.setString(7, booking.customerPhone)
         ps.setInt(8, booking.guestCount)
-        ps.setTimestamp(9, Timestamp.from(booking.eventDate))
+        setUtcInstant(ps, 9, booking.eventDate)
         ps.setString(10, booking.startTime)
         ps.setDouble(11, booking.durationHours)
         ps.setDouble(12, booking.totalPrice)
         ps.setString(13, booking.status)
         ps.setString(14, booking.notes.orNull)
-        ps.setTimestamp(15, now)
-        ps.setTimestamp(16, now)
+        setUtcInstant(ps, 15, booking.createdAt)
+        setUtcInstant(ps, 16, booking.createdAt)
         ps.executeUpdate()
       }
     }

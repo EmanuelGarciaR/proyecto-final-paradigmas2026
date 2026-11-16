@@ -248,7 +248,7 @@ class ChivasBusinessService(
       status = b.status,
       notes = b.notes,
       calendarSyncStatus = b.calendarSyncStatus,
-      createdAt = b.createdAt.toString
+      createdAt = Domain.toIsoString(b.createdAt)
     )
 
   /**
@@ -318,7 +318,7 @@ class ChivasBusinessService(
       id = booking.id,
       code = booking.id,
       status = booking.status,
-      createdAt = booking.createdAt.toString,
+      createdAt = Domain.toIsoString(booking.createdAt),
       chivaId = booking.chivaId,
       chivaName = chivaName,
       travelId = booking.travel,

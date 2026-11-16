@@ -185,6 +185,13 @@ public final class Models {
         return !scheduledBogota.toInstant().isAfter(now);
     }
 
+    private static final DateTimeFormatter ISO_MILLIS_UTC =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC);
+
+    public static String toIsoString(Instant instant) {
+        return ISO_MILLIS_UTC.format(instant);
+    }
+
     public static String toUtcDateString(Instant instant) {
         return instant.atZone(ZoneOffset.UTC).toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }

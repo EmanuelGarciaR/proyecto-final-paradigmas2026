@@ -1,0 +1,10 @@
+**/node_modules
+**/.next
+.git
+backend-scala/.sbt-wrapper
+backend-scala/project/target
+backend-scala/target/streams
+backend-scala/target/scala-3.3.4/classes
+backend-scala/target/scala-3.3.4/test-classes
+backend-java/target/classes
+backend-java/target/test-classes

@@ -207,6 +207,12 @@ object Domain:
         s"La cantidad de invitados ($count) supera la capacidad de la chiva ($chivaCapacity)."
       )
 
+  private val IsoMillisUtc: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneOffset.UTC)
+
+  def toIsoString(instant: Instant): String =
+    IsoMillisUtc.format(instant)
+
   def toUtcDateString(instant: Instant): String =
     instant.atZone(ZoneOffset.UTC).toLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
