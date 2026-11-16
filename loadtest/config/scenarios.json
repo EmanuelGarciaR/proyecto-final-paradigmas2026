@@ -1,38 +1,51 @@
 {
   "seed": 20261115,
   "repetitions": 3,
-  "warmupDurationSeconds": 15,
+  "warmupDurationSeconds": 5,
+  "warmupVus": 8,
   "mockLatencyMs": 50,
   "volumes": [1000, 100000, 1000000],
   "backends": {
-    "express": "http://localhost:3001",
-    "java": "http://localhost:3002",
-    "scala": "http://localhost:3003"
+    "express": {
+      "hostUrl": "http://localhost:3001",
+      "dockerUrl": "http://backend-express:3000",
+      "containerName": "chivas-backend-express"
+    },
+    "java": {
+      "hostUrl": "http://localhost:3002",
+      "dockerUrl": "http://backend-java:3000",
+      "containerName": "chivas-backend-java"
+    },
+    "scala": {
+      "hostUrl": "http://localhost:3003",
+      "dockerUrl": "http://backend-scala:3000",
+      "containerName": "chivas-backend-scala"
+    }
   },
   "scenarios": {
     "low": {
       "vus": 10,
-      "duration": "30s"
+      "duration": "6s"
     },
     "medium": {
-      "vus": 30,
-      "duration": "45s"
+      "vus": 25,
+      "duration": "6s"
     },
     "high": {
-      "vus": 60,
-      "duration": "60s"
+      "vus": 50,
+      "duration": "6s"
     },
     "spike": {
       "stages": [
-        { "duration": "10s", "target": 10 },
-        { "duration": "15s", "target": 120 },
-        { "duration": "15s", "target": 10 },
-        { "duration": "10s", "target": 0 }
+        { "duration": "2s", "target": 10 },
+        { "duration": "3s", "target": 80 },
+        { "duration": "2s", "target": 10 },
+        { "duration": "1s", "target": 0 }
       ]
     },
     "soak": {
-      "vus": 25,
-      "duration": "120s"
+      "vus": 20,
+      "duration": "10s"
     }
   }
 }
