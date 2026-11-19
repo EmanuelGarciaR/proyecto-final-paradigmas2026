@@ -4,6 +4,7 @@
   "warmupDurationSeconds": 2,
   "warmupVus": 10,
   "mockLatencyMs": 50,
+  "liveDurationSeconds": 60,
   "volumes": [1000, 100000, 1000000],
   "backends": {
     "express": {
