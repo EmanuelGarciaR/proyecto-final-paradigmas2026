@@ -10,6 +10,8 @@ import { getChivas } from '@/lib/api/chivas'
 import { getTravels } from '@/lib/api/travels'
 import type { ChivaListItem, Travel } from '@/lib/types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   let chivas: ChivaListItem[] = []
   let travels: Travel[] = []
@@ -17,8 +19,8 @@ export default async function HomePage() {
 
   try {
     const result = await Promise.all([
-      getChivas('available'),
-      getTravels(),
+      getChivas('available', 0),
+      getTravels(0),
     ])
     chivas = result[0]
     travels = result[1]

@@ -48,7 +48,7 @@ services:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
-      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000},http://127.0.0.1:${FRONTEND_PORT:-3000},http://localhost:3005
     ports:
       - "${EXPRESS_PORT:-3001}:3000"
     cpus: ${BACKEND_CPUS:-1.0}
@@ -86,7 +86,7 @@ services:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
-      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000},http://127.0.0.1:${FRONTEND_PORT:-3000},http://localhost:3005
     ports:
       - "${JAVA_PORT:-3002}:3000"
     cpus: ${BACKEND_CPUS:-1.0}
@@ -124,7 +124,7 @@ services:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-chivas-rumberas-demo}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-123456789012345}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-cloudinary_secret_for_signature_test}
-      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-3000},http://127.0.0.1:${FRONTEND_PORT:-3000},http://localhost:3005
     ports:
       - "${SCALA_PORT:-3003}:3000"
     cpus: ${BACKEND_CPUS:-1.0}
@@ -152,7 +152,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      NEXT_PUBLIC_API_HOST: http://backend-express:3000
+      API_INTERNAL_HOST: http://backend-express:3000
+      NEXT_PUBLIC_API_HOST: http://localhost:${EXPRESS_PORT:-3001}
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     networks:

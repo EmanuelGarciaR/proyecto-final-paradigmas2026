@@ -9,7 +9,7 @@ COPY chivas-rumberas-frontend/package*.json ./
 RUN npm ci
 
 COPY chivas-rumberas-frontend/ ./
-RUN npm run build
+RUN rm -f .env.local && npm run build
 
 FROM node:22-bookworm-slim AS runner
 

@@ -1,4 +1,9 @@
-const API_URL_HOST = process.env['NEXT_PUBLIC_API_HOST']
+function getApiUrlHost(): string {
+  if (typeof window === 'undefined') {
+    return process.env['API_INTERNAL_HOST'] || process.env['NEXT_PUBLIC_API_HOST'] || ''
+  }
+  return process.env['NEXT_PUBLIC_API_HOST'] || ''
+}
 
 export class ApiError extends Error {
   constructor(
@@ -20,7 +25,7 @@ export async function apiFetch<T>(
   path: string,
   { tags, revalidate, ...init }: FetchOptions = {},
 ): Promise<T> {
-  const url = `${API_URL_HOST}${path}`
+  const url = `${getApiUrlHost()}${path}`
 
   const res = await fetch(url, {
     headers: {

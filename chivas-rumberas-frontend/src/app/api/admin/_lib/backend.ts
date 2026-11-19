@@ -13,7 +13,7 @@ export async function proxyAdminRequest(
     )
   }
 
-  const backendUrl = process.env['NEXT_PUBLIC_API_HOST']
+  const backendUrl = process.env['API_INTERNAL_HOST'] || process.env['NEXT_PUBLIC_API_HOST']
 
   try {
     const response = await fetch(`${backendUrl}${path}`, {

@@ -49,7 +49,7 @@ export async function PATCH(
 
   const { id } = await context.params
   try {
-    const apiUrl = process.env['NEXT_PUBLIC_API_HOST']
+    const apiUrl = process.env['API_INTERNAL_HOST'] || process.env['NEXT_PUBLIC_API_HOST']
     const payload: { status: BookingStatus; totalPrice?: number } = {
       status: nextStatus as BookingStatus,
       ...(totalPrice !== undefined ? { totalPrice } : {}),

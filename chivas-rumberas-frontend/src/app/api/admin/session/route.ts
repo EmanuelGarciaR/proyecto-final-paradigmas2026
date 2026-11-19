@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const backendUrl = process.env['NEXT_PUBLIC_API_HOST']
+  const backendUrl = process.env['API_INTERNAL_HOST'] || process.env['NEXT_PUBLIC_API_HOST']
 
   let loginResponse: Response
   try {
