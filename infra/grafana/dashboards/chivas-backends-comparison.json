@@ -23,7 +23,7 @@
       "title": "Tiempo de Arranque por Backend (s)",
       "type": "bargauge",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
       "fieldConfig": {
         "defaults": {
           "unit": "s",
@@ -54,18 +54,54 @@
       ]
     },
     {
+      "id": 10,
+      "title": "Total Peticiones Entrantes (Acumulado sin /health ni /metrics)",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 100 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "sum by (backend) (chivas_rumberas_http_requests_total{route!~\"/metrics|/health\"})",
+          "legendFormat": "{{backend}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
       "id": 2,
-      "title": "Throughput Comparativo (req/s)",
+      "title": "Throughput Comparativo en Tiempo Real (req/s, ventana 15s)",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
       "fieldConfig": {
         "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 15 } },
         "overrides": []
       },
       "targets": [
         {
-          "expr": "sum by (backend) (rate(chivas_rumberas_http_requests_total[15s]))",
+          "expr": "sum by (backend) (rate(chivas_rumberas_http_requests_total{route!~\"/metrics|/health\"}[15s]))",
           "legendFormat": "{{backend}} (req/s)",
           "refId": "A"
         }
@@ -76,7 +112,7 @@
       "title": "Tasa de Errores HTTP 5xx (%)",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
       "fieldConfig": {
         "defaults": { "unit": "percent", "custom": { "lineWidth": 2, "fillOpacity": 10 } },
         "overrides": []
@@ -155,12 +191,12 @@
       },
       "targets": [
         {
-          "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"chivas-backend-.*\"}[1m]))",
+          "expr": "sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"chivas-backend-.*\"}[15s]))",
           "legendFormat": "cAdvisor {{name}}",
           "refId": "A"
         },
         {
-          "expr": "sum by (backend) (rate(chivas_rumberas_process_cpu_seconds_total[1m]))",
+          "expr": "sum by (backend) (rate(chivas_rumberas_process_cpu_seconds_total[15s]))",
           "legendFormat": "process {{backend}}",
           "refId": "B"
         }
@@ -206,64 +242,26 @@
           "refId": "A"
         },
         {
-          "expr": "sum by (backend) (rate(jvm_gc_pause_seconds_sum[1m]))",
+          "expr": "sum by (backend) (rate(jvm_gc_pause_seconds_sum[15s]))",
           "legendFormat": "{{backend}} JVM GC Pause (s/s)",
           "refId": "B"
         }
       ]
     },
     {
-      "id": 10,
-      "title": "Peticiones Totales Recibidas (en el rango seleccionado)",
-      "type": "stat",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 22 },
-      "fieldConfig": { "defaults": { "unit": "none", "decimals": 0 }, "overrides": [] },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
-      },
-      "targets": [
-        {
-          "expr": "sum by (backend) (increase(chivas_rumberas_http_requests_total[$__range]))",
-          "legendFormat": "{{backend}}",
-          "refId": "A"
-        }
-      ]
-    },
-    {
       "id": 11,
-      "title": "Peticiones Entrantes Acumuladas (contador)",
+      "title": "Curva de Peticiones Entrantes Acumuladas vs. Peticiones por Endpoint (req/s)",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 22 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 22 },
       "fieldConfig": {
-        "defaults": { "unit": "none", "custom": { "lineWidth": 2, "fillOpacity": 10 } },
-        "overrides": []
-      },
-      "targets": [
-        {
-          "expr": "sum by (backend) (chivas_rumberas_http_requests_total)",
-          "legendFormat": "{{backend}} (total acumulado)",
-          "refId": "A"
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "title": "Peticiones por Ruta (req/s)",
-      "type": "timeseries",
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 22 },
-      "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 1, "fillOpacity": 10, "stacking": { "mode": "normal" } } },
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 10 } },
         "overrides": []
       },
       "targets": [
         {
           "expr": "sum by (backend, route) (rate(chivas_rumberas_http_requests_total{route!~\"/metrics|/health\"}[15s]))",
-          "legendFormat": "{{backend}} {{route}}",
+          "legendFormat": "{{backend}} -> {{route}} (req/s)",
           "refId": "A"
         }
       ]
