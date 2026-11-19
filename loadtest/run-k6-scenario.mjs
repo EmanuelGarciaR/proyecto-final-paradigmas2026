@@ -56,23 +56,9 @@ export function runK6Scenario({
   }
 
   const isWarmup = scenarioName === "warmup";
-  let scenarioCfg = isWarmup
+  const scenarioCfg = isWarmup
     ? { vus: config.warmupVus || 8, duration: `${config.warmupDurationSeconds || 5}s` }
     : config.scenarios[scenarioName];
-
-  // Modo "live": corridas largas para observar las curvas en Grafana (K6_LIVE=1 o --live).
-  // El benchmark completo (run-all-benchmarks) NO lo usa y conserva sus duraciones cortas.
-  if (scenarioCfg && !isWarmup && process.env.K6_LIVE === "1") {
-    const liveSecs = Number(process.env.K6_LIVE_SECONDS || config.liveDurationSeconds || 60);
-    scenarioCfg = Array.isArray(scenarioCfg.stages)
-      ? {
-          stages: scenarioCfg.stages.map((s) => ({
-            ...s,
-            duration: `${Math.max(1, Math.round(liveSecs / 4))}s`,
-          })),
-        }
-      : { ...scenarioCfg, duration: `${liveSecs}s` };
-  }
 
   if (!scenarioCfg) {
     throw new Error(`Escenario desconocido: ${scenarioName}`);
@@ -150,9 +136,7 @@ const SCENARIO_ALIASES = {
 };
 
 if (isMain) {
-  const rawArgs = process.argv.slice(2);
-  if (rawArgs.includes("--live") || rawArgs.includes("live")) process.env.K6_LIVE = "1";
-  const args = rawArgs.filter((a) => a !== "--live" && a !== "live");
+  const args = process.argv.slice(2);
   const hasFlags = args.some((a) => a.startsWith("--"));
   const getArg = (flag, def) => {
     const idx = args.indexOf(flag);
