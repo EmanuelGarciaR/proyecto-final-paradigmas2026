@@ -116,17 +116,42 @@ const isMain =
   process.argv[1] &&
   path.resolve(process.argv[1]) === path.resolve("loadtest/run-k6-scenario.mjs");
 
+const SCENARIO_ALIASES = {
+  s1_bajo: "low",
+  bajo: "low",
+  low: "low",
+  s2_medio: "medium",
+  medio: "medium",
+  medium: "medium",
+  s3_alto: "high",
+  alto: "high",
+  high: "high",
+  s4_picos: "spike",
+  picos: "spike",
+  spike: "spike",
+  s5_resistencia: "soak",
+  resistencia: "soak",
+  soak: "soak",
+  warmup: "warmup",
+};
+
 if (isMain) {
   const args = process.argv.slice(2);
+  const hasFlags = args.some((a) => a.startsWith("--"));
   const getArg = (flag, def) => {
     const idx = args.indexOf(flag);
     return idx !== -1 ? args[idx + 1] : def;
   };
 
-  const backendName = getArg("--backend", "express");
-  const volume = Number(getArg("--volume", "1000"));
-  const scenarioName = getArg("--scenario", "low");
-  const rep = Number(getArg("--rep", "1"));
+  const rawBackend = hasFlags ? getArg("--backend", "express") : args[0] || "express";
+  const rawScenario = hasFlags ? getArg("--scenario", "low") : args[1] || "low";
+  const rawVolume = hasFlags ? getArg("--volume", "1000") : args[2] || "1000";
+  const rawRep = hasFlags ? getArg("--rep", "1") : args[3] || "1";
+
+  const backendName = rawBackend.toLowerCase();
+  const scenarioName = SCENARIO_ALIASES[rawScenario.toLowerCase()] || rawScenario;
+  const volume = Number(rawVolume);
+  const rep = Number(rawRep);
 
   console.log(`🚀 Ejecutando escenario k6 '${scenarioName}' (vol=${volume}, backend=${backendName}, rep=${rep})...`);
   const summary = runK6Scenario({ backendName, volume, scenarioName, repetition: rep });
